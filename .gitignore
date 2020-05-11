@@ -1,0 +1,4 @@
+# Project exclude paths
+/bc-admin/target/
+/bc-common/target/
+/bc-travel/target/
