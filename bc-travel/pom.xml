@@ -11,5 +11,12 @@
 
     <artifactId>bc-travel</artifactId>
 
+    <dependencies>
+        <dependency>
+            <artifactId>bc-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <groupId>com.zhuohang</groupId>
+        </dependency>
+    </dependencies>
 
 </project>

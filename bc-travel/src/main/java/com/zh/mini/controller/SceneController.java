@@ -6,6 +6,7 @@ import com.zh.mini.entity.Scene;
 import com.zh.mini.service.ISceneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import util.Result;
 
 import java.util.List;
 
@@ -36,10 +37,22 @@ public class SceneController {
         return service.list();
     }
 
+    //周神之：归来
+
     @GetMapping("/getByUsername")
     public List<Scene> getByUsername(@RequestParam String username){
-        QueryWrapper<Scene> wrapper = new QueryWrapper<>();
-        wrapper.eq("username",username);
-        return service.list(wrapper);
+        if (!username.equals("admin") && !username.equals("manager")) {
+            QueryWrapper<Scene> wrapper = new QueryWrapper<>();
+            wrapper.eq("username", username);
+            return service.list(wrapper);
+        }
+        else return service.list();
+    }
+
+    @PostMapping("/addScene")
+    public Result addScene(@RequestBody Scene scene){
+        service.saveScene(scene);
+        System.out.print(scene.toString());
+        return null;
     }
 }

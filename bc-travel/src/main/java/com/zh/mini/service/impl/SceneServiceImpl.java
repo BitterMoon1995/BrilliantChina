@@ -35,10 +35,12 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     public void saveScene(Scene scene) {
         boolean isBlank = StringUtils.isBlank(scene.getId());
         if (isBlank){
-            save(scene);
-            String id = scene.getId();
-
-            saveDetails(scene, id);
+            boolean saved = save(scene);
+            String id = "";
+            if (saved) {
+                id = scene.getId();
+                saveDetails(scene, id);
+            }
         }
         else {
             updateById(scene);
@@ -57,20 +59,21 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     }
     void saveDetails(Scene scene,String id){
         List<SceneImage> introImgs = scene.getIntroImgs();
-        for (SceneImage img : introImgs) {
-            img.setSceneId(id);
-            imageService.save(img);
+
+        int size = introImgs.size();
+        for (int i = 0; i < size; i++) {
+            SceneImage image = introImgs.get(i);
+            image.setSceneId(id);
+            image.setOrderNum(i);
+            imageService.save(image);
         }
 
         SceneImage postcard = scene.getPostcard();
-        postcard.setType("postcard");
         postcard.setSceneId(id);
-        postcard.setTop(false);
         imageService.save(postcard);
 
         Swiper swiper = scene.getSwiper();
         swiper.setTargetId(id);
-        swiper.setTop(false);
         swiperService.save(swiper);
     }
 }

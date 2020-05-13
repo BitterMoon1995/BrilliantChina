@@ -27,13 +27,15 @@ public class Swiper implements Serializable {
     @TableId(value = "id", type = IdType.ASSIGN_UUID)
     private String id;
 
+    private String name;
+
     private String src;
 
-    private String targetId;
+    private String targetId;//上传确定
 
-    private String url;
+    private String url;//待定
 
-    private Integer orderNum;
-
-    private Boolean top;
+    private Integer orderNum;//首页管理确定
+    //是否置顶
+    private Boolean top;//首页管理确定
 }

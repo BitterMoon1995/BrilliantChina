@@ -31,14 +31,15 @@ public class SceneImage implements Serializable {
 
     private String src;
 
-    private String url;
+    private String url;//待定
 
-    private String sceneId;//后端确定
+    private String sceneId;//上传确定
 
-    private Integer orderNum;//后端确定
+    private Integer orderNum;//上传确定
 
+    //intros 详情页轮播图 | postcard 明信片 | richText 详情图
     private String type;
 
-    private Boolean top;
+    private Boolean top;//首页管理确定
 
 }

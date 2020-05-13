@@ -46,9 +46,8 @@ public class Scene implements Serializable {
     private SceneImage postcard;//名片图
 
     @TableField(exist = false)
-    private Swiper swiper;//首页轮播图
+    private SceneImage richText;//富文本图片
 
     @TableField(exist = false)
-    private SceneImage detail;//详情页
-
+    private Swiper swiper;//首页轮播图
 }

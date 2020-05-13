@@ -14,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface ISceneService extends IService<Scene> {
 
     void saveScene(Scene scene);
+
 }
