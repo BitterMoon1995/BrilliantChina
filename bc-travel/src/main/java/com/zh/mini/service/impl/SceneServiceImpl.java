@@ -14,7 +14,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.Collator;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * <p>
@@ -27,6 +31,8 @@ import java.util.List;
 @Service
 public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements ISceneService {
 
+    @Autowired
+    SceneMapper mapper;
     @Autowired
     ISceneImageService imageService;
     @Autowired
@@ -57,6 +63,17 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
         }
 
     }
+
+    @Override
+    public void resetOrder() {
+        List<Scene> list = this.list();
+        Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
+        Collections.sort(list,comparator);
+
+        System.out.printf(String.valueOf(list));
+
+    }
+
     void saveDetails(Scene scene,String id){
         List<SceneImage> introImgs = scene.getIntroImgs();
 

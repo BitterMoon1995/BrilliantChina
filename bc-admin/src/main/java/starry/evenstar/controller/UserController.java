@@ -59,6 +59,7 @@ public class UserController {
     public UserVo getAll(@RequestParam Integer pageNum, @RequestParam Integer pageSize
             , @RequestParam String condition){
         UserVo vo = new UserVo();
+        //非搜索请求
         if (condition.isEmpty()){
             Page<User> page = new Page<>(pageNum, pageSize,false);//第几页 每一页几个 不计数
             Page<User> userPage = service.page(page);
@@ -66,6 +67,7 @@ public class UserController {
             vo.setUserList(userList);
             vo.setTotal(service.count());
         }
+        //搜索请求，condition是条件。这里根据用户名搜索
         else {
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.like("username",condition);

@@ -15,4 +15,5 @@ public interface ISceneService extends IService<Scene> {
 
     void saveScene(Scene scene);
 
+    void resetOrder();
 }

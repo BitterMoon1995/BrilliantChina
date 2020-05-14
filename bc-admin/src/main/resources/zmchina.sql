@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 13/05/2020 17:58:47
+ Date: 14/05/2020 18:22:55
 */
 
 SET NAMES utf8mb4;
@@ -92,6 +92,9 @@ CREATE TABLE `mini_route`  (
 -- ----------------------------
 -- Records of mini_route
 -- ----------------------------
+INSERT INTO `mini_route` VALUES ('cadc', '把', '擦', NULL);
+INSERT INTO `mini_route` VALUES ('joi', '爱', '透', NULL);
+INSERT INTO `mini_route` VALUES ('vae', '情', '爱', NULL);
 
 -- ----------------------------
 -- Table structure for mini_route_image
@@ -117,18 +120,21 @@ CREATE TABLE `mini_route_image`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `mini_scene`;
 CREATE TABLE `mini_scene`  (
-  `id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `id` varchar(50) CHARACTER SET gbk COLLATE gbk_chinese_ci NOT NULL,
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `slogan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '精简介绍',
-  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `username` varchar(100) CHARACTER SET gbk COLLATE gbk_bin NULL DEFAULT NULL,
   `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '景区地址',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mini_scene
 -- ----------------------------
-INSERT INTO `mini_scene` VALUES ('a', '峨眉山', '牛逼！！！！！', 'admin', '老北京儿儿儿儿儿');
+INSERT INTO `mini_scene` VALUES ('a', '则', '牛逼！！！！！', 'admin', '老北京儿儿儿儿儿');
+INSERT INTO `mini_scene` VALUES ('a1', '哥', '牛逼！！！！！', 'admin', '老北京儿儿儿儿儿');
+INSERT INTO `mini_scene` VALUES ('a2', '大', '牛逼！！！！！', 'admin', '老北京儿儿儿儿儿');
+INSERT INTO `mini_scene` VALUES ('a3', '啊', '牛逼！！！！！', 'admin', '老北京儿儿儿儿儿');
 
 -- ----------------------------
 -- Table structure for mini_scene_image
@@ -302,12 +308,16 @@ CREATE TABLE `user`  (
 -- ----------------------------
 INSERT INTO `user` VALUES ('a', 'admin', '123456', 1, '18598462152', 1, '卓行科技', 'cdacasd@qq.com');
 INSERT INTO `user` VALUES ('6ad106db64d3bcb88d611b5ce0416fe8', 'admin2', '111111', 1, '', 1, '', NULL);
-INSERT INTO `user` VALUES ('f', 'client3', '123456', 2, NULL, 1, NULL, NULL);
 INSERT INTO `user` VALUES ('b', 'manager1', '123', 2, NULL, 1, '卓行科技', NULL);
 INSERT INTO `user` VALUES ('c', 'manager2', '123', 2, NULL, 1, '卓行科技', NULL);
-INSERT INTO `user` VALUES ('014f8be538b5ae76ad76cf7876b04fb7', 'aaaaa', '123456', 3, '', 1, '', '');
 INSERT INTO `user` VALUES ('as', 'bbbbb', '123456', 3, NULL, 1, NULL, NULL);
 INSERT INTO `user` VALUES ('d', 'client1', '123', 3, NULL, 1, NULL, NULL);
-INSERT INTO `user` VALUES ('143aa88c11ab7f49b6e073cde4a418bb', 'client5', '123456', 3, '', 1, '', NULL);
+INSERT INTO `user` VALUES ('143aa88c11ab7f49b6e073cde4a418bb', 'client9', '123456', 3, '', 1, '', NULL);
+
+-- ----------------------------
+-- View structure for nigger
+-- ----------------------------
+DROP VIEW IF EXISTS `nigger`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `nigger` AS select `mini_scene`.`id` AS `id`,`mini_scene`.`name` AS `name`,`mini_scene`.`slogan` AS `slogan`,`mini_scene`.`username` AS `username`,`mini_scene`.`location` AS `location` from `mini_scene` order by (convert(`mini_scene`.`name` using gbk) collate gbk_chinese_ci);
 
 SET FOREIGN_KEY_CHECKS = 1;
