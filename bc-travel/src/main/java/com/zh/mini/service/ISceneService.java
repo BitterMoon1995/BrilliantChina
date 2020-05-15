@@ -16,4 +16,8 @@ public interface ISceneService extends IService<Scene> {
     void saveScene(Scene scene);
 
     void resetOrder();
+
+    void setImgs(Scene scene, String id);
+
+    void editScene(Scene scene);
 }

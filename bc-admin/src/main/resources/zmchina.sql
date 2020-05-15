@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 14/05/2020 18:22:55
+ Date: 15/05/2020 17:13:24
 */
 
 SET NAMES utf8mb4;
@@ -131,6 +131,8 @@ CREATE TABLE `mini_scene`  (
 -- ----------------------------
 -- Records of mini_scene
 -- ----------------------------
+INSERT INTO `mini_scene` VALUES ('11905ff9733a4ae554df9c711d9d9e8b', '西湖', '老北京', 'admin', '北京');
+INSERT INTO `mini_scene` VALUES ('75cda79b9ca048d9e1685eac824b17a2', '小人国成都', '小人国成都', 'admin', '小人国成都');
 INSERT INTO `mini_scene` VALUES ('a', '则', '牛逼！！！！！', 'admin', '老北京儿儿儿儿儿');
 INSERT INTO `mini_scene` VALUES ('a1', '哥', '牛逼！！！！！', 'admin', '老北京儿儿儿儿儿');
 INSERT INTO `mini_scene` VALUES ('a2', '大', '牛逼！！！！！', 'admin', '老北京儿儿儿儿儿');
@@ -155,6 +157,20 @@ CREATE TABLE `mini_scene_image`  (
 -- ----------------------------
 -- Records of mini_scene_image
 -- ----------------------------
+INSERT INTO `mini_scene_image` VALUES ('223c553a4ad2287240678ae5cb9f3893', 'f.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-LEKADI7OAAd6u4dG9C8272.jpg', NULL, '11905ff9733a4ae554df9c711d9d9e8b', NULL, 'postcard', 0);
+INSERT INTO `mini_scene_image` VALUES ('269a779cdbc233094fc9c10662efc450', 'f.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-LD-AKcFNAAd6u4dG9C8083.jpg', NULL, '11905ff9733a4ae554df9c711d9d9e8b', 0, 'intros', 0);
+INSERT INTO `mini_scene_image` VALUES ('2a8e341d631b837d38b0548440445faa', '微信图片_2020051510462710.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-IB2AQWMKAAEijgvxXmU689.jpg', NULL, '120a118606f24ffcc22acd67bce7aa81', 1, 'intros', 0);
+INSERT INTO `mini_scene_image` VALUES ('3c3c5de22ab7009a0d1d486d3561fe88', 'saobi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-T1KATdFRAAFgkcPQfk4256.jpg', NULL, '96132df092b29d6205fc508b841fe6fe', 0, 'intros', 0);
+INSERT INTO `mini_scene_image` VALUES ('5f841e87b2ef4b4b839a52f907ec6a54', 'choubi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-Uu-AQZ26AAGReDCmTKM435.jpg', NULL, '75cda79b9ca048d9e1685eac824b17a2', NULL, 'postcard', 0);
+INSERT INTO `mini_scene_image` VALUES ('70a648af44fa3e854b624617820ce277', 'saobi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-T2GADtB3AAFgkcPQfk4889.jpg', NULL, '96132df092b29d6205fc508b841fe6fe', NULL, 'richText', 0);
+INSERT INTO `mini_scene_image` VALUES ('8148bb0ba6f5b2daf47fa99bdee3d9e5', 'choubi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-UveAMXedAAGReDCmTKM107.jpg', NULL, '75cda79b9ca048d9e1685eac824b17a2', NULL, 'richText', 0);
+INSERT INTO `mini_scene_image` VALUES ('9abb2ce95c62a0c7c6b7a74efbea9d8b', 'saobi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-T1KATdFRAAFgkcPQfk4256.jpg', NULL, 'ce7658eb8a22f9bfd78b8c0573414d24', 0, 'intros', 0);
+INSERT INTO `mini_scene_image` VALUES ('ae55ce91c07ee7fcfc81f1dc63444dc0', 'saobi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-T1aAbzoZAAFgkcPQfk4521.jpg', NULL, 'ce7658eb8a22f9bfd78b8c0573414d24', NULL, 'postcard', 0);
+INSERT INTO `mini_scene_image` VALUES ('c4b87cef3ed1bd039631c9fcf2c1ed1d', 'saobi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-T1aAbzoZAAFgkcPQfk4521.jpg', NULL, '96132df092b29d6205fc508b841fe6fe', NULL, 'postcard', 0);
+INSERT INTO `mini_scene_image` VALUES ('d9393d63cdeb728849278e2152461cec', 'saobi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-T2GADtB3AAFgkcPQfk4889.jpg', NULL, 'ce7658eb8a22f9bfd78b8c0573414d24', NULL, 'richText', 0);
+INSERT INTO `mini_scene_image` VALUES ('e42dbb13f3f3579db8a7d7cf92e3b2c7', '微信图片_202005151046279.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-IBmAcXtBAADrzBKiP_E532.jpg', NULL, '120a118606f24ffcc22acd67bce7aa81', 0, 'intros', 0);
+INSERT INTO `mini_scene_image` VALUES ('f7f895ff596ce4b809ed7df02373e211', 'choubi.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-UuuAAbBiAAGReDCmTKM667.jpg', NULL, '75cda79b9ca048d9e1685eac824b17a2', 0, 'intros', 0);
+INSERT INTO `mini_scene_image` VALUES ('fcc73858f5548dbca1a4bed3c0a71803', '微信图片_202005151046271.jpg', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-ICGAIhgxAAIlVFNtuJ0294.jpg', NULL, '120a118606f24ffcc22acd67bce7aa81', NULL, 'postcard', 0);
 
 -- ----------------------------
 -- Table structure for mini_swiper
@@ -165,7 +181,7 @@ CREATE TABLE `mini_swiper`  (
   `src` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `target_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `url` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `ordernum` int(0) NULL DEFAULT NULL,
+  `order_num` int(0) NULL DEFAULT NULL,
   `top` tinyint(0) NULL DEFAULT NULL,
   `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -174,6 +190,11 @@ CREATE TABLE `mini_swiper`  (
 -- ----------------------------
 -- Records of mini_swiper
 -- ----------------------------
+INSERT INTO `mini_swiper` VALUES ('172dfa65f7bbe957ebfe2348f3cb6839', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-T1qADQc2AAFgkcPQfk4220.jpg', '96132df092b29d6205fc508b841fe6fe', NULL, NULL, 0, 'saobi.jpg');
+INSERT INTO `mini_swiper` VALUES ('b2390d260811b4d57209a8d4e6ffd71d', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-UvOAZg66AAGReDCmTKM277.jpg', '75cda79b9ca048d9e1685eac824b17a2', NULL, NULL, 0, 'choubi.jpg');
+INSERT INTO `mini_swiper` VALUES ('cfad945e2abf09b05cd55f6397d28def', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-ICWAD3wQAAMfv50gLVE815.jpg', '120a118606f24ffcc22acd67bce7aa81', NULL, NULL, 0, '微信图片_202005151046273.jpg');
+INSERT INTO `mini_swiper` VALUES ('d6fc932c0cfc3e7622e0aedde541c757', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-LEaACxRaAAd6u4dG9C8152.jpg', '11905ff9733a4ae554df9c711d9d9e8b', NULL, NULL, 0, 'f.jpg');
+INSERT INTO `mini_swiper` VALUES ('ece6a67dc27e2d8542526374322e02c5', 'http://192.168.156.128//group1/M00/00/02/wKicgF6-T1qADQc2AAFgkcPQfk4220.jpg', 'ce7658eb8a22f9bfd78b8c0573414d24', NULL, NULL, 0, 'saobi.jpg');
 
 -- ----------------------------
 -- Table structure for mini_ticket
@@ -310,6 +331,7 @@ INSERT INTO `user` VALUES ('a', 'admin', '123456', 1, '18598462152', 1, '卓行�
 INSERT INTO `user` VALUES ('6ad106db64d3bcb88d611b5ce0416fe8', 'admin2', '111111', 1, '', 1, '', NULL);
 INSERT INTO `user` VALUES ('b', 'manager1', '123', 2, NULL, 1, '卓行科技', NULL);
 INSERT INTO `user` VALUES ('c', 'manager2', '123', 2, NULL, 1, '卓行科技', NULL);
+INSERT INTO `user` VALUES ('34ad9662cfcaee3e4c15d9e0f5e7dbd1', '123', '123456', 3, '是是', 1, '是s', '是');
 INSERT INTO `user` VALUES ('as', 'bbbbb', '123456', 3, NULL, 1, NULL, NULL);
 INSERT INTO `user` VALUES ('d', 'client1', '123', 3, NULL, 1, NULL, NULL);
 INSERT INTO `user` VALUES ('143aa88c11ab7f49b6e073cde4a418bb', 'client9', '123456', 3, '', 1, '', NULL);

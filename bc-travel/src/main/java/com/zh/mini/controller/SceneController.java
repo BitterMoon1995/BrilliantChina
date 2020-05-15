@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.service.ISceneService;
 import com.zh.mini.vo.SceneVo;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import util.Info;
 import util.Result;
 
 import java.util.List;
@@ -72,8 +74,39 @@ public class SceneController {
 
     @PostMapping("/addScene")
     public Result addScene(@RequestBody Scene scene){
-        service.saveScene(scene);
-        System.out.print(scene.toString());
-        return null;
+        Result result = new Result(new Object(),new Info());
+        String name = scene.getName();
+        QueryWrapper<Scene> wrapper = new QueryWrapper<>();
+        wrapper.eq("name",name);
+        List<Scene> list = service.list(wrapper);
+//        不重名 ID为空 说明是新增
+        if (list.size()==0 && scene.getId()==null){
+            service.saveScene(scene);
+            result.data = null;
+            result.info.setCode(200);
+            result.info.setMsg("新增景区成功！");
+            return result;
+        }
+//        重名 ID不空 说明修改
+        if (list.size()==1 && !scene.getId().isEmpty()){
+            service.editScene(scene);
+            result.data = null;
+            result.info.setCode(200);
+            result.info.setMsg("编辑景区成功！");
+        }
+        else {
+            result.data=null;
+            result.info.setCode(400);
+            result.info.setMsg("景区名已存在！");
+        }
+        return result;
+    }
+
+    @GetMapping("/getScene")
+    public Scene getScene(@RequestParam String id,@RequestParam boolean img){
+        Scene scene = service.getById(id);
+        if (img)
+        service.setImgs(scene,id);
+        return scene;
     }
 }

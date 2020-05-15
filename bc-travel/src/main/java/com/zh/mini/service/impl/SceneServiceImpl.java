@@ -74,8 +74,41 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
 
     }
 
-    void saveDetails(Scene scene,String id){
+    @Override
+    public void setImgs(Scene scene, String id) {
+        QueryWrapper<SceneImage> qIntros = new QueryWrapper<>();
+        qIntros.eq("scene_id",id).eq("type","intros");
+        List<SceneImage> intros = imageService.list(qIntros);
+        scene.setIntroImgs(intros);
+
+        QueryWrapper<SceneImage> qPostcard = new QueryWrapper<>();
+        qPostcard.eq("scene_id",id).eq("type","postcard");
+        SceneImage postcard = imageService.getOne(qPostcard);
+        scene.setPostcard(postcard);
+
+        QueryWrapper<Swiper> qSwiper = new QueryWrapper<>();
+        qSwiper.eq("target_id",id);
+        Swiper swiper = swiperService.getOne(qSwiper);
+        scene.setSwiper(swiper);
+    }
+
+    @Override
+    public void editScene(Scene scene) {
+        mapper.updateById(scene);
+
+        delDetails(scene.getId());
+        saveDetails(scene,scene.getId());
+    }
+
+    Integer saveDetails(Scene scene,String id){
         List<SceneImage> introImgs = scene.getIntroImgs();
+        SceneImage postcard = scene.getPostcard();
+        Swiper swiper = scene.getSwiper();
+        SceneImage richText = scene.getRichText();
+
+        if (introImgs==null||postcard==null||swiper==null||richText==null){
+            return 400;
+        }
 
         int size = introImgs.size();
         for (int i = 0; i < size; i++) {
@@ -85,12 +118,26 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
             imageService.save(image);
         }
 
-        SceneImage postcard = scene.getPostcard();
         postcard.setSceneId(id);
         imageService.save(postcard);
 
-        Swiper swiper = scene.getSwiper();
         swiper.setTargetId(id);
         swiperService.save(swiper);
+
+        //富文本！！！！！！
+        richText.setSceneId(id);
+        imageService.save(richText);
+
+        return 200;
+    }
+
+    void delDetails(String id){
+        QueryWrapper<SceneImage> sceneImageWrapper = new QueryWrapper<>();
+        sceneImageWrapper.eq("scene_id",id);
+        imageService.remove(sceneImageWrapper);
+
+        QueryWrapper<Swiper> swiperWrapper = new QueryWrapper<>();
+        swiperWrapper.eq("target_id",id);
+        swiperService.remove(swiperWrapper);
     }
 }
