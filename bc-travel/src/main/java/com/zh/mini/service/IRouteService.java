@@ -2,6 +2,9 @@ package com.zh.mini.service;
 
 import com.zh.mini.entity.Route;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zh.mini.entity.Route;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,5 +16,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRouteService extends IService<Route> {
 
-    void saveRoute(Route route);
+    void add(Route route);
+
+    void resetOrder();
+
+    void setImgs(Route route, String id);
+
+    void edit(Route route);
+
+    void delDetails(String id);
+
+    List<Route> search(String username, String name);
+
+    List<Route> allSearch(String name);
 }

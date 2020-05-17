@@ -35,6 +35,7 @@ public class UserController {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("username", user.getUsername());
         List<User> list = service.list(wrapper);
+
         if (list.size()==0) {
             result.info= new Info("用户名不存在！", 404);
         }

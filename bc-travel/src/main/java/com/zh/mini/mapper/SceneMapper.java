@@ -21,4 +21,10 @@ public interface SceneMapper extends BaseMapper<Scene> {
     //尝试从DB层排序，失败........
 //    @Select("select * from mini_scene order by convert(name using gbk) collate gbk_chinese_ci")
 //    List<Object> resetOrder();
+
+    @Select("SELECT * FROM mini_scene WHERE username = #{username} AND LOCATE( #{name} ,name) > 0")
+    List<Scene> query(String username,String name);
+
+    @Select("SELECT * FROM mini_scene WHERE LOCATE( #{name} ,name) > 0")
+    List<Scene> allSearch(String name);
 }

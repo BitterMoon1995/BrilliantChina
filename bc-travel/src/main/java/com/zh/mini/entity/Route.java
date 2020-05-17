@@ -33,16 +33,19 @@ public class Route implements Serializable {
 
     private String name;
 
-    private String introduce;
+    private String slogan;
 
-    private Integer price;
-
-    @TableField(exist = false)
-    private List<RouteImage> introImgs;
+    private String username;
 
     @TableField(exist = false)
-    private RouteImage postcard;
+    private List<RouteImage> introImgs;//详情页轮播图，6张
 
     @TableField(exist = false)
-    private Swiper swiper;
+    private RouteImage postcard;//名片图
+
+    @TableField(exist = false)
+    private RouteImage richText;//富文本图片
+
+    @TableField(exist = false)
+    private Swiper swiper;//首页轮播图
 }

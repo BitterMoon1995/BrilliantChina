@@ -10,6 +10,7 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import util.Info;
+import util.QueryParams;
 import util.Result;
 
 import java.util.List;
@@ -28,19 +29,6 @@ import java.util.List;
 public class SceneController {
     @Autowired
     ISceneService service;
-    @PostMapping("/saveScene")
-    public void saveScene(@RequestBody Scene scene){
-        service.saveScene(scene);
-    }
-    @PostMapping("/updateScene")
-    public void updateScene(@RequestBody Scene scene){
-        service.updateById(scene);
-    }
-    @GetMapping("/list")
-    public List<Scene> list(){
-        return service.list();
-    }
-
     //周神之：归来
 
     @GetMapping("/getByUsername")
@@ -65,6 +53,19 @@ public class SceneController {
                 sceneVo.setTotal(service.count());
             }
         }
+        //搜索
+        else {
+            //非管理员根据username查
+            List<Scene> sceneList;
+            if (!username.equals("admin") && !username.equals("manager")) {
+                sceneList = service.search(username,condition);
+                //一定要返回真正的总数量
+            } else {
+                sceneList = service.allSearch(condition);
+            }
+            sceneVo.setSceneList(sceneList);
+            sceneVo.setTotal(sceneList.size());
+        }
         return sceneVo;
     }
     @GetMapping("/resetOrder")
@@ -72,8 +73,8 @@ public class SceneController {
         service.resetOrder();
     }
 
-    @PostMapping("/addScene")
-    public Result addScene(@RequestBody Scene scene){
+    @PostMapping("/add")
+    public Result add(@RequestBody Scene scene){
         Result result = new Result(new Object(),new Info());
         String name = scene.getName();
         QueryWrapper<Scene> wrapper = new QueryWrapper<>();
@@ -103,10 +104,16 @@ public class SceneController {
     }
 
     @GetMapping("/getScene")
-    public Scene getScene(@RequestParam String id,@RequestParam boolean img){
+    public Scene get(@RequestParam String id,@RequestParam boolean img){
         Scene scene = service.getById(id);
         if (img)
         service.setImgs(scene,id);
         return scene;
+    }
+
+    @DeleteMapping("/del")
+    public boolean delScene(@RequestParam String id){
+        service.delDetails(id);
+        return service.removeById(id);
     }
 }

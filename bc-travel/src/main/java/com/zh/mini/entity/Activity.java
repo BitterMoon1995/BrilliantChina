@@ -33,14 +33,21 @@ public class Activity implements Serializable {
 
     private String name;
 
-    private String introduce;
+    private String slogan;//宣传语
+
+    private String location;//景区地址
+
+    private String username;
 
     @TableField(exist = false)
-    private List<ActivityImage> introImgs;
+    private List<ActivityImage> introImgs;//详情页轮播图，6张
 
     @TableField(exist = false)
-    private ActivityImage postcard;
+    private ActivityImage postcard;//名片图
 
     @TableField(exist = false)
-    private Swiper swiper;
+    private ActivityImage richText;//富文本图片
+
+    @TableField(exist = false)
+    private Swiper swiper;//首页轮播图
 }

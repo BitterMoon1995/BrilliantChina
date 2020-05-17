@@ -2,6 +2,10 @@ package com.zh.mini.service;
 
 import com.zh.mini.entity.Activity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zh.mini.entity.Route;
+import com.zh.mini.entity.Activity;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,7 +17,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IActivityService extends IService<Activity> {
 
-    void addAct(Activity activity);
+    void saveActivity(Activity activity);
 
-    Activity getAct(String id);
+    void resetOrder();
+
+    void setImgs(Activity activity, String id);
+
+    void editActivity(Activity activity);
+
+    void delDetails(String id);
+
+    List<Activity> search(String username, String name);
+
+    List<Activity> allSearch(String name);
 }

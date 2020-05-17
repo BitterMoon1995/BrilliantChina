@@ -2,8 +2,12 @@ package com.zh.mini.mapper;
 
 import com.zh.mini.entity.Activity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zh.mini.entity.Activity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,5 +19,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ActivityMapper extends BaseMapper<Activity> {
+    @Select("SELECT * FROM mini_activity WHERE username = #{username} AND LOCATE( #{name} ,name) > 0")
+    List<Activity> query(String username, String name);
 
+    @Select("SELECT * FROM mini_activity WHERE LOCATE( #{name} ,name) > 0")
+    List<Activity> allSearch(String name);
 }

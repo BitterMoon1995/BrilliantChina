@@ -3,7 +3,6 @@ package com.zh.mini.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.SceneImage;
-import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.Swiper;
 import com.zh.mini.mapper.SceneMapper;
 import com.zh.mini.service.ISceneImageService;
@@ -96,42 +95,55 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     public void editScene(Scene scene) {
         mapper.updateById(scene);
 
-        delDetails(scene.getId());
         saveDetails(scene,scene.getId());
     }
 
-    Integer saveDetails(Scene scene,String id){
+    void saveDetails(Scene scene, String id){
         List<SceneImage> introImgs = scene.getIntroImgs();
         SceneImage postcard = scene.getPostcard();
         Swiper swiper = scene.getSwiper();
         SceneImage richText = scene.getRichText();
 
-        if (introImgs==null||postcard==null||swiper==null||richText==null){
-            return 400;
+        if (introImgs!=null) {
+            QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
+            wrapper.eq("type","intros").eq("scene_id",id);
+            imageService.remove(wrapper);
+
+            int size = introImgs.size();
+            for (int i = 0; i < size; i++) {
+                SceneImage image = introImgs.get(i);
+                image.setSceneId(id);
+                image.setOrderNum(i);
+                imageService.save(image);
+            }
         }
 
-        int size = introImgs.size();
-        for (int i = 0; i < size; i++) {
-            SceneImage image = introImgs.get(i);
-            image.setSceneId(id);
-            image.setOrderNum(i);
-            imageService.save(image);
+        if (postcard!=null) {
+            QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
+            wrapper.eq("type","postcard").eq("scene_id",id);
+            imageService.remove(wrapper);
+            postcard.setSceneId(id);
+            imageService.save(postcard);
         }
 
-        postcard.setSceneId(id);
-        imageService.save(postcard);
+        if (swiper!=null) {
+            QueryWrapper<Swiper> wrapper = new QueryWrapper<>();
+            wrapper.eq("target_id",id);
+            swiper.setTargetId(id);
+            swiperService.save(swiper);
+        }
 
-        swiper.setTargetId(id);
-        swiperService.save(swiper);
+        if (richText!=null) {
+            QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
+            wrapper.eq("type","richText").eq("scene_id",id);
+            imageService.remove(wrapper);
+            richText.setSceneId(id);
+            imageService.save(richText);
+        }
 
-        //富文本！！！！！！
-        richText.setSceneId(id);
-        imageService.save(richText);
-
-        return 200;
     }
 
-    void delDetails(String id){
+    public void delDetails(String id){
         QueryWrapper<SceneImage> sceneImageWrapper = new QueryWrapper<>();
         sceneImageWrapper.eq("scene_id",id);
         imageService.remove(sceneImageWrapper);
@@ -139,5 +151,15 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
         QueryWrapper<Swiper> swiperWrapper = new QueryWrapper<>();
         swiperWrapper.eq("target_id",id);
         swiperService.remove(swiperWrapper);
+    }
+
+    @Override
+    public List<Scene> search(String username, String name) {
+        return mapper.query(username,name);
+    }
+
+    @Override
+    public List<Scene> allSearch(String name) {
+        return mapper.allSearch(name);
     }
 }
