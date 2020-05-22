@@ -2,10 +2,10 @@ package com.zh.mini.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zh.mini.common.ResCode;
 import com.zh.mini.entity.Category;
+import com.zh.mini.entity.RouteImage;
 import com.zh.mini.entity.SceneImage;
-import com.zh.mini.entity.Swiper;
+import com.zh.mini.entity.Slider;
 import com.zh.mini.service.ICategoryService;
 import com.zh.mini.service.ISceneImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,23 +31,27 @@ import java.util.List;
 public class SceneImageController {
     @Autowired
     ISceneImageService service;
-    @RequestMapping("/addInBulk")
-    public void addInBulk(@RequestBody List<SceneImage> images){
-        if (images.size()==4) {
-            QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
-            service.remove(wrapper);
-            service.saveBatch(images);
-        }
-    }
-    @RequestMapping("/add")
-    public void add(@RequestBody SceneImage image){
-        service.save(image);
-    }
-    @RequestMapping("/list")
-    public List<SceneImage> list(){
+    //周神之铃鹿御前
+    @RequestMapping("/getSticky")
+    public List<SceneImage> getSticky(){
         QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
-        wrapper.eq("type","homePage");
-        wrapper.orderByAsc("order_num");
+        wrapper.eq("type","postcard")
+               .orderByAsc("order_num");
         return service.list(wrapper);
+    }
+    @RequestMapping("/getIntros")
+    public List<SceneImage> getIntros(String sceneId){
+        QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
+        wrapper.eq("type","intros")
+                .eq("scene_id",sceneId)
+                .orderByAsc("order_num");
+        return service.list(wrapper);
+    }
+    @RequestMapping("/getRichText")
+    public SceneImage getRichText(String sceneId){
+        QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
+        wrapper.eq("type","richText")
+                .eq("scene_id",sceneId);
+        return service.getOne(wrapper);
     }
 }

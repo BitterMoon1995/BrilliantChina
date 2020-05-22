@@ -49,5 +49,5 @@ public class Scene implements Serializable {
     private SceneImage richText;//富文本图片
 
     @TableField(exist = false)
-    private Swiper swiper;//首页轮播图
+    private Slider slider;//首页轮播图
 }

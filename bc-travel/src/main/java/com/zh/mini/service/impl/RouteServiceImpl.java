@@ -1,14 +1,14 @@
 package com.zh.mini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zh.mini.bo.StickyRoute;
+import com.zh.mini.bo.StickyScene;
 import com.zh.mini.entity.*;
-import com.zh.mini.mapper.RouteMapper;
 import com.zh.mini.mapper.RouteMapper;
 import com.zh.mini.service.IRouteImageService;
 import com.zh.mini.service.IRouteService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zh.mini.service.IRouteImageService;
-import com.zh.mini.service.ISwiperService;
+import com.zh.mini.service.ISliderService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
     @Autowired
     IRouteImageService imageService;
     @Autowired
-    ISwiperService swiperService;
+    ISliderService sliderService;
     @Override
     public void add(Route route) {
         boolean isBlank = StringUtils.isBlank(route.getId());
@@ -49,15 +49,6 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
         }
         else {
             updateById(route);
-
-            QueryWrapper<RouteImage> imageQueryWrapper = new QueryWrapper<>();
-            imageQueryWrapper.eq("route_id", route.getId());
-            imageService.remove(imageQueryWrapper);
-
-            QueryWrapper<Swiper> swiperQueryWrapper = new QueryWrapper<>();
-            swiperQueryWrapper.eq("target_id", route.getId());
-            swiperService.remove(swiperQueryWrapper);
-
             saveDetails(route, route.getId());
         }
 
@@ -65,11 +56,21 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
 
     @Override
     public void resetOrder() {
-        List<Route> list = this.list();
-        Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
-        Collections.sort(list,comparator);
 
-        System.out.printf(String.valueOf(list));
+
+        List<Route> list = this.list();
+        QueryWrapper<Route> wrapper = new QueryWrapper<>();
+        mapper.delete(wrapper);
+
+        Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
+        list.sort((a, b) -> {
+            return comparator.compare(a.getName(), b.getName());
+        });
+
+        list.forEach(item->{
+            item.setId("");
+            save(item);
+        });
 
     }
 
@@ -85,10 +86,10 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
         RouteImage postcard = imageService.getOne(qPostcard);
         route.setPostcard(postcard);
 
-        QueryWrapper<Swiper> qSwiper = new QueryWrapper<>();
-        qSwiper.eq("target_id",id);
-        Swiper swiper = swiperService.getOne(qSwiper);
-        route.setSwiper(swiper);
+        QueryWrapper<Slider> qSlider = new QueryWrapper<>();
+        qSlider.eq("target_id",id);
+        Slider slider = sliderService.getOne(qSlider);
+        route.setSlider(slider);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
     void saveDetails(Route route, String id){
         List<RouteImage> introImgs = route.getIntroImgs();
         RouteImage postcard = route.getPostcard();
-        Swiper swiper = route.getSwiper();
+        Slider slider = route.getSlider();
         RouteImage richText = route.getRichText();
 
         if (introImgs!=null) {
@@ -126,11 +127,12 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
             imageService.save(postcard);
         }
 
-        if (swiper!=null) {
-            QueryWrapper<Swiper> wrapper = new QueryWrapper<>();
+        if (slider!=null) {
+            QueryWrapper<Slider> wrapper = new QueryWrapper<>();
             wrapper.eq("target_id",id);
-            swiper.setTargetId(id);
-            swiperService.save(swiper);
+            sliderService.remove(wrapper);
+            slider.setTargetId(id);
+            sliderService.save(slider);
         }
 
         if (richText!=null) {
@@ -148,9 +150,9 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
         routeImageWrapper.eq("route_id",id);
         imageService.remove(routeImageWrapper);
 
-        QueryWrapper<Swiper> swiperWrapper = new QueryWrapper<>();
-        swiperWrapper.eq("target_id",id);
-        swiperService.remove(swiperWrapper);
+        QueryWrapper<Slider> sliderWrapper = new QueryWrapper<>();
+        sliderWrapper.eq("target_id",id);
+        sliderService.remove(sliderWrapper);
     }
 
     @Override
@@ -161,5 +163,15 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
     @Override
     public List<Route> allSearch(String name) {
         return mapper.allSearch(name);
+    }
+
+    @Override
+    public List<StickyRoute> getSticky(Integer index, Integer offset) {
+        return mapper.getSticky(index, offset);
+    }
+
+    @Override
+    public List<StickyRoute> search(Integer index, Integer offset, String name) {
+        return mapper.search(index,offset,name);
     }
 }

@@ -2,15 +2,20 @@ package com.zh.mini.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zh.mini.entity.Scene;
+import com.zh.mini.entity.SceneImage;
+import com.zh.mini.entity.Slider;
+import com.zh.mini.service.ISceneImageService;
 import com.zh.mini.service.ISceneService;
+import com.zh.mini.service.ISliderService;
+import com.zh.mini.bo.StickyScene;
+import com.zh.mini.vo.StickySceneVo;
 import com.zh.mini.vo.SceneVo;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import util.Info;
-import util.QueryParams;
 import util.Result;
 
 import java.util.List;
@@ -116,4 +121,70 @@ public class SceneController {
         service.delDetails(id);
         return service.removeById(id);
     }
+
+    @GetMapping("/getSticky")
+    public StickySceneVo getSticky(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
+                                  @RequestParam String condition){
+        StickySceneVo sceneStickyVo = new StickySceneVo();
+        List<StickyScene> stickyList;
+
+        if (condition.isEmpty()) {
+            stickyList = service.getSticky((pageNum - 1) * pageSize, pageSize);
+        }
+        else {
+            stickyList = service.search((pageNum - 1) * pageSize, pageSize,condition);
+        }
+        int total = service.count();
+        sceneStickyVo.setStickyList(stickyList);
+        sceneStickyVo.setTotal(total);
+        return sceneStickyVo;
+    }
+
+    @Autowired
+    ISceneImageService imageService;
+    @Autowired
+    ISliderService sliderService;
+
+    @PostMapping("/change")
+    public Result change(@RequestBody StickyScene stickyScene){
+
+        Result result = new Result(new Object(), new Info());
+
+        //更新名片
+        UpdateWrapper<SceneImage> sceneUW= new UpdateWrapper<>();
+        sceneUW.eq("id", stickyScene.getImgId());
+
+        SceneImage sceneImage = imageService.getById(stickyScene.getImgId());
+        sceneImage.setTop(stickyScene.getStickyTop());
+        sceneImage.setOrderNum(stickyScene.getStickyOrder());
+        sceneImage.setUrl(stickyScene.getUrl());
+        imageService.update(sceneImage,sceneUW);
+
+        //更新首页轮播图
+        UpdateWrapper<Slider> sliderUW = new UpdateWrapper<>();
+        sliderUW.eq("id",stickyScene.getSliderId());
+
+        Slider slider = sliderService.getById(stickyScene.getSliderId());
+        slider.setTop(stickyScene.getSliderTop());
+        slider.setOrderNum(stickyScene.getSliderOrder());
+        slider.setUrl(stickyScene.getUrl());
+        sliderService.update(slider,sliderUW);
+
+        //校验轮播图，置顶的数量不能大于4
+        QueryWrapper<Slider> sliderQW = new QueryWrapper<>();
+        sliderQW.eq("top",true);
+        int count = sliderService.count(sliderQW);
+
+        if (count>4){
+            result.data=null;
+            result.info.setCode(400);
+            result.info.setMsg("轮播图置顶数量不能超过四个！");
+            return result;
+        }
+
+        result.data=null;
+        result.info.setCode(200);
+        return result;
+    }
+
 }

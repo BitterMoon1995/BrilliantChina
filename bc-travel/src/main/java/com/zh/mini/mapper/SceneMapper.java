@@ -2,6 +2,7 @@ package com.zh.mini.mapper;
 
 import com.zh.mini.entity.Scene;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zh.mini.bo.StickyScene;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -22,9 +23,41 @@ public interface SceneMapper extends BaseMapper<Scene> {
 //    @Select("select * from mini_scene order by convert(name using gbk) collate gbk_chinese_ci")
 //    List<Object> resetOrder();
 
-    @Select("SELECT * FROM mini_scene WHERE username = #{username} AND LOCATE( #{name} ,name) > 0")
+    //景区名中文搜索  按用户名查询
+    @Select("SELECT * FROM mini_scene " +
+            "WHERE username = #{username} " +
+            "AND LOCATE( #{name} ,name) > 0")
     List<Scene> query(String username,String name);
 
+    //管理员搜索
     @Select("SELECT * FROM mini_scene WHERE LOCATE( #{name} ,name) > 0")
     List<Scene> allSearch(String name);
+
+    //景区置顶 联合分页查询
+//    StickyScene这个业务类要管理该景区的所有置顶信息，所以联合查询的部分字段要取别名
+    @Select("SELECT s.name,\n" +
+            "i.id imgId,i.top stickyTop,i.order_num stickyOrder,i.url,\n" +
+            "sl.id sliderId,sl.top sliderTop,sl.order_num sliderOrder\n" +
+            "FROM mini_scene AS s \n" +
+            "LEFT JOIN mini_scene_image AS i\n" +
+            "ON s.id=i.scene_id\n" +
+            "LEFT JOIN mini_slider AS sl\n" +
+            "ON s.id=sl.target_id\n" +
+            "WHERE i.type='postcard'\n" +
+            "LIMIT #{index},#{offset}")
+    List<StickyScene> getSticky(Integer index, Integer offset);
+
+    //景区置顶 搜索 联合分页条件查询
+    @Select("SELECT s.name,\n" +
+            "i.id imgId,i.top stickyTop,i.order_num stickyOrder,i.url,\n" +
+            "sl.id sliderId,sl.top sliderTop,sl.order_num sliderOrder\n" +
+            "FROM mini_scene AS s \n" +
+            "LEFT JOIN mini_scene_image AS i\n" +
+            "ON s.id=i.scene_id\n" +
+            "LEFT JOIN mini_slider AS sl\n" +
+            "ON s.id=sl.target_id\n" +
+            "WHERE i.type='postcard'\n" +
+            "AND LOCATE( #{name} ,s.`name`) > 0\n" +
+            "LIMIT #{index},#{offset}")
+    List<StickyScene> search(Integer index, Integer offset, String name);
 }

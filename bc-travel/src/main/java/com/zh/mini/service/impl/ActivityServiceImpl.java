@@ -1,16 +1,15 @@
 package com.zh.mini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zh.mini.entity.Activity;
+import com.zh.mini.bo.StickyActivity;
 import com.zh.mini.entity.Activity;
 import com.zh.mini.entity.ActivityImage;
-import com.zh.mini.entity.Swiper;
-import com.zh.mini.mapper.ActivityMapper;
+import com.zh.mini.entity.Slider;
 import com.zh.mini.mapper.ActivityMapper;
 import com.zh.mini.service.IActivityService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zh.mini.service.IActivityImageService;
-import com.zh.mini.service.ISwiperService;
+import com.zh.mini.service.ISliderService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     @Autowired
     IActivityImageService imageService;
     @Autowired
-    ISwiperService swiperService;
+    ISliderService sliderService;
     @Override
     public void saveActivity(Activity activity) {
         boolean isBlank = StringUtils.isBlank(activity.getId());
@@ -50,15 +49,6 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
         }
         else {
             updateById(activity);
-
-            QueryWrapper<ActivityImage> imageQueryWrapper = new QueryWrapper<>();
-            imageQueryWrapper.eq("activity_id", activity.getId());
-            imageService.remove(imageQueryWrapper);
-
-            QueryWrapper<Swiper> swiperQueryWrapper = new QueryWrapper<>();
-            swiperQueryWrapper.eq("target_id", activity.getId());
-            swiperService.remove(swiperQueryWrapper);
-
             saveDetails(activity, activity.getId());
         }
 
@@ -68,9 +58,9 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     public void resetOrder() {
         List<Activity> list = this.list();
         Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
-        Collections.sort(list,comparator);
+        list.sort(comparator);
 
-        System.out.printf(String.valueOf(list));
+        System.out.print(String.valueOf(list));
 
     }
 
@@ -86,10 +76,10 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
         ActivityImage postcard = imageService.getOne(qPostcard);
         activity.setPostcard(postcard);
 
-        QueryWrapper<Swiper> qSwiper = new QueryWrapper<>();
-        qSwiper.eq("target_id",id);
-        Swiper swiper = swiperService.getOne(qSwiper);
-        activity.setSwiper(swiper);
+        QueryWrapper<Slider> qSlider = new QueryWrapper<>();
+        qSlider.eq("target_id",id);
+        Slider slider = sliderService.getOne(qSlider);
+        activity.setSlider(slider);
     }
 
     @Override
@@ -102,7 +92,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     void saveDetails(Activity activity, String id){
         List<ActivityImage> introImgs = activity.getIntroImgs();
         ActivityImage postcard = activity.getPostcard();
-        Swiper swiper = activity.getSwiper();
+        Slider slider = activity.getSlider();
         ActivityImage richText = activity.getRichText();
 
         if (introImgs!=null) {
@@ -127,11 +117,12 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
             imageService.save(postcard);
         }
 
-        if (swiper!=null) {
-            QueryWrapper<Swiper> wrapper = new QueryWrapper<>();
+        if (slider!=null) {
+            QueryWrapper<Slider> wrapper = new QueryWrapper<>();
             wrapper.eq("target_id",id);
-            swiper.setTargetId(id);
-            swiperService.save(swiper);
+            sliderService.remove(wrapper);
+            slider.setTargetId(id);
+            sliderService.save(slider);
         }
 
         if (richText!=null) {
@@ -149,9 +140,9 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
         activityImageWrapper.eq("activity_id",id);
         imageService.remove(activityImageWrapper);
 
-        QueryWrapper<Swiper> swiperWrapper = new QueryWrapper<>();
-        swiperWrapper.eq("target_id",id);
-        swiperService.remove(swiperWrapper);
+        QueryWrapper<Slider> sliderWrapper = new QueryWrapper<>();
+        sliderWrapper.eq("target_id",id);
+        sliderService.remove(sliderWrapper);
     }
 
     @Override
@@ -163,4 +154,16 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     public List<Activity> allSearch(String name) {
         return mapper.allSearch(name);
     }
+
+    @Override
+    public List<StickyActivity> getSticky(Integer index, Integer offset) {
+        return mapper.getSticky(index,offset);
+    }
+
+    @Override
+    public List<StickyActivity> search(Integer index, Integer offset, String name) {
+        return mapper.search(index,offset,name);
+    }
+
+
 }

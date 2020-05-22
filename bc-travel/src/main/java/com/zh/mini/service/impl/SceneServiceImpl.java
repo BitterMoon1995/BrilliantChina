@@ -3,12 +3,13 @@ package com.zh.mini.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.SceneImage;
-import com.zh.mini.entity.Swiper;
+import com.zh.mini.entity.Slider;
 import com.zh.mini.mapper.SceneMapper;
 import com.zh.mini.service.ISceneImageService;
 import com.zh.mini.service.ISceneService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zh.mini.service.ISwiperService;
+import com.zh.mini.service.ISliderService;
+import com.zh.mini.bo.StickyScene;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     @Autowired
     ISceneImageService imageService;
     @Autowired
-    ISwiperService swiperService;
+    ISliderService sliderService;
     @Override
     public void saveScene(Scene scene) {
         boolean isBlank = StringUtils.isBlank(scene.getId());
@@ -49,15 +50,6 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
         }
         else {
             updateById(scene);
-
-            QueryWrapper<SceneImage> imageQueryWrapper = new QueryWrapper<>();
-            imageQueryWrapper.eq("scene_id", scene.getId());
-            imageService.remove(imageQueryWrapper);
-
-            QueryWrapper<Swiper> swiperQueryWrapper = new QueryWrapper<>();
-            swiperQueryWrapper.eq("target_id", scene.getId());
-            swiperService.remove(swiperQueryWrapper);
-
             saveDetails(scene, scene.getId());
         }
 
@@ -67,7 +59,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     public void resetOrder() {
         List<Scene> list = this.list();
         Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
-        Collections.sort(list,comparator);
+        list.sort(comparator);
 
         System.out.printf(String.valueOf(list));
 
@@ -85,10 +77,10 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
         SceneImage postcard = imageService.getOne(qPostcard);
         scene.setPostcard(postcard);
 
-        QueryWrapper<Swiper> qSwiper = new QueryWrapper<>();
-        qSwiper.eq("target_id",id);
-        Swiper swiper = swiperService.getOne(qSwiper);
-        scene.setSwiper(swiper);
+        QueryWrapper<Slider> qSlider = new QueryWrapper<>();
+        qSlider.eq("target_id",id);
+        Slider slider = sliderService.getOne(qSlider);
+        scene.setSlider(slider);
     }
 
     @Override
@@ -101,7 +93,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     void saveDetails(Scene scene, String id){
         List<SceneImage> introImgs = scene.getIntroImgs();
         SceneImage postcard = scene.getPostcard();
-        Swiper swiper = scene.getSwiper();
+        Slider slider = scene.getSlider();
         SceneImage richText = scene.getRichText();
 
         if (introImgs!=null) {
@@ -126,11 +118,12 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
             imageService.save(postcard);
         }
 
-        if (swiper!=null) {
-            QueryWrapper<Swiper> wrapper = new QueryWrapper<>();
+        if (slider!=null) {
+            QueryWrapper<Slider> wrapper = new QueryWrapper<>();
             wrapper.eq("target_id",id);
-            swiper.setTargetId(id);
-            swiperService.save(swiper);
+            sliderService.remove(wrapper);
+            slider.setTargetId(id);
+            sliderService.save(slider);
         }
 
         if (richText!=null) {
@@ -148,9 +141,9 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
         sceneImageWrapper.eq("scene_id",id);
         imageService.remove(sceneImageWrapper);
 
-        QueryWrapper<Swiper> swiperWrapper = new QueryWrapper<>();
-        swiperWrapper.eq("target_id",id);
-        swiperService.remove(swiperWrapper);
+        QueryWrapper<Slider> sliderWrapper = new QueryWrapper<>();
+        sliderWrapper.eq("target_id",id);
+        sliderService.remove(sliderWrapper);
     }
 
     @Override
@@ -161,5 +154,15 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     @Override
     public List<Scene> allSearch(String name) {
         return mapper.allSearch(name);
+    }
+
+    @Override
+    public List<StickyScene> getSticky(Integer index, Integer offset) {
+        return mapper.getSticky(index,offset);
+    }
+
+    @Override
+    public List<StickyScene> search(Integer index, Integer offset, String name) {
+        return mapper.search(index,offset,name);
     }
 }

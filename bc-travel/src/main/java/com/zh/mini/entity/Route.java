@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -33,9 +34,13 @@ public class Route implements Serializable {
 
     private String name;
 
+    private String planning;//旅游线路游玩规划
+
     private String slogan;
 
     private String username;
+
+    private Date createTime;
 
     @TableField(exist = false)
     private List<RouteImage> introImgs;//详情页轮播图，6张
@@ -47,5 +52,5 @@ public class Route implements Serializable {
     private RouteImage richText;//富文本图片
 
     @TableField(exist = false)
-    private Swiper swiper;//首页轮播图
+    private Slider slider;//首页轮播图
 }

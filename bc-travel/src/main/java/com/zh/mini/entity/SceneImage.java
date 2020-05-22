@@ -38,6 +38,8 @@ public class SceneImage implements Serializable {
     private Integer orderNum;//上传确定
 
     //intros 详情页轮播图 | postcard 明信片 | richText 详情图
+    //明信片出现在首页楼层和景区列表页，两者的orderNum是一致的
+    //即楼层图中置顶的景区也将处于列表页的前四行且顺序一致
     private String type;
 
     private Boolean top;//首页管理确定

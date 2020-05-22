@@ -2,11 +2,18 @@ package com.zh.mini.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zh.mini.bo.StickyActivity;
 import com.zh.mini.entity.Activity;
 import com.zh.mini.entity.Activity;
+import com.zh.mini.entity.ActivityImage;
+import com.zh.mini.entity.Slider;
 import com.zh.mini.service.IActivityService;
+import com.zh.mini.service.IActivityImageService;
+import com.zh.mini.service.ISliderService;
 import com.zh.mini.vo.ActivityVo;
+import com.zh.mini.vo.StickyActivityVo;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -114,5 +121,70 @@ public class ActivityController {
     public boolean delActivity(@RequestParam String id){
         service.delDetails(id);
         return service.removeById(id);
+    }
+
+    @GetMapping("/getSticky")
+    public StickyActivityVo getSticky(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
+                                   @RequestParam String condition){
+        StickyActivityVo activityStickyVo = new StickyActivityVo();
+        List<StickyActivity> stickyList;
+
+        if (condition.isEmpty()) {
+            stickyList = service.getSticky((pageNum - 1) * pageSize, pageSize);
+        }
+        else {
+            stickyList = service.search((pageNum - 1) * pageSize, pageSize,condition);
+        }
+        int total = service.count();
+        activityStickyVo.setStickyList(stickyList);
+        activityStickyVo.setTotal(total);
+        return activityStickyVo;
+    }
+
+    @Autowired
+    IActivityImageService imageService;
+    @Autowired
+    ISliderService sliderService;
+
+    @PostMapping("/change")
+    public Result change(@RequestBody StickyActivity stickyActivity){
+
+        Result result = new Result(new Object(), new Info());
+
+        //更新名片
+        UpdateWrapper<ActivityImage> activityUW= new UpdateWrapper<>();
+        activityUW.eq("id", stickyActivity.getImgId());
+
+        ActivityImage activityImage = imageService.getById(stickyActivity.getImgId());
+        activityImage.setTop(stickyActivity.getStickyTop());
+        activityImage.setOrderNum(stickyActivity.getStickyOrder());
+        activityImage.setUrl(stickyActivity.getUrl());
+        imageService.update(activityImage,activityUW);
+
+        //更新首页轮播图
+        UpdateWrapper<Slider> sliderUW = new UpdateWrapper<>();
+        sliderUW.eq("id",stickyActivity.getSliderId());
+
+        Slider slider = sliderService.getById(stickyActivity.getSliderId());
+        slider.setTop(stickyActivity.getSliderTop());
+        slider.setOrderNum(stickyActivity.getSliderOrder());
+        slider.setUrl(stickyActivity.getUrl());
+        sliderService.update(slider,sliderUW);
+
+        //校验轮播图，置顶的数量不能大于4
+        QueryWrapper<Slider> sliderQW = new QueryWrapper<>();
+        sliderQW.eq("top",true);
+        int count = sliderService.count(sliderQW);
+
+        if (count>4){
+            result.data=null;
+            result.info.setCode(400);
+            result.info.setMsg("轮播图置顶数量不能超过四个！");
+            return result;
+        }
+
+        result.data=null;
+        result.info.setCode(200);
+        return result;
     }
 }

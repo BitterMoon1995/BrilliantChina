@@ -27,23 +27,5 @@ import java.util.List;
 public class RouteImageController {
     @Autowired
     IRouteImageService service;
-    @RequestMapping("/addInBulk")
-    public void addInBulk(@RequestBody List<RouteImage> images){
-        if (images.size()==4) {
-            QueryWrapper<RouteImage> wrapper = new QueryWrapper<>();
-            service.remove(wrapper);
-            service.saveBatch(images);
-        }
-    }
-    @RequestMapping("/add")
-    public void add(@RequestBody RouteImage image){
-        service.save(image);
-    }
-    @RequestMapping("/list")
-    public List<RouteImage> list(){
-        QueryWrapper<RouteImage> wrapper = new QueryWrapper<>();
-        wrapper.eq("type","homePage");
-        wrapper.orderByAsc("order_num");
-        return service.list(wrapper);
-    }
+
 }

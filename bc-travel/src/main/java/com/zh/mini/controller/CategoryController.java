@@ -3,7 +3,7 @@ package com.zh.mini.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zh.mini.entity.Category;
-import com.zh.mini.entity.Swiper;
+import com.zh.mini.entity.Slider;
 import com.zh.mini.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

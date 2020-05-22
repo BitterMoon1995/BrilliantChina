@@ -34,7 +34,7 @@ public class Generator {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         // 在指定的子模块下生成。会有WINDOWS弹窗报错，不用管
-        String projectPath = System.getProperty("user.dir")+"/WeiXinApp";
+        String projectPath = System.getProperty("user.dir")+"/bc-travel";
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("海琴烟");
         gc.setOpen(true);
@@ -44,10 +44,10 @@ public class Generator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://118.24.106.117:3306/zmchina?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false");
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/zmchina?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("zH>kj)20<20(");
+        dsc.setPassword("root");
         mpg.setDataSource(dsc);
 
         // 包配置
