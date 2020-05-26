@@ -5,10 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zh.mini.bo.StickyActivity;
+import com.zh.mini.entity.*;
 import com.zh.mini.entity.Activity;
-import com.zh.mini.entity.Activity;
-import com.zh.mini.entity.ActivityImage;
-import com.zh.mini.entity.Slider;
 import com.zh.mini.service.IActivityService;
 import com.zh.mini.service.IActivityImageService;
 import com.zh.mini.service.ISliderService;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import util.Info;
 import util.Result;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -82,30 +81,32 @@ public class ActivityController {
     @PostMapping("/add")
     public Result add(@RequestBody Activity activity){
         Result result = new Result(new Object(),new Info());
+        result.setData(null);
         String name = activity.getName();
         QueryWrapper<Activity> wrapper = new QueryWrapper<>();
         wrapper.eq("name",name);
         List<Activity> list = service.list(wrapper);
-//        不重名 ID为空 说明是新增
-        if (list.size()==0 && activity.getId()==null){
-            service.saveActivity(activity);
-            result.data = null;
+//        ID为空 说明是新增
+        if (activity.getId()==null){
+//            重名，报错
+            if (list.size()!=0){
+                result.info.setCode(400);
+                result.info.setMsg("景区名已存在！");
+                return result;
+            }
+            //设置创建时间
+            activity.setCreateTime(new Date());
+            service.add(activity);
             result.info.setCode(200);
             result.info.setMsg("新增景区成功！");
-            return result;
         }
-//        重名 ID不空 说明修改
-        if (list.size()==1 && !activity.getId().isEmpty()){
-            service.editActivity(activity);
-            result.data = null;
+//        ID不为空就是修改，修改不检查重名！！！！！！！
+        else {
+            service.edit(activity);
             result.info.setCode(200);
             result.info.setMsg("编辑景区成功！");
         }
-        else {
-            result.data=null;
-            result.info.setCode(400);
-            result.info.setMsg("景区名已存在！");
-        }
+        service.resetOrder();
         return result;
     }
 

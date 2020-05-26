@@ -35,6 +35,7 @@ public interface ActivityMapper extends BaseMapper<Activity> {
             "LEFT JOIN mini_slider AS sl\n" +
             "ON s.id=sl.target_id\n" +
             "WHERE i.type='postcard'\n" +
+            "ORDER BY s.create_time DESC\n" +
             "LIMIT #{index},#{offset}")
     List<StickyActivity> getSticky(Integer index, Integer offset);
 
@@ -48,6 +49,10 @@ public interface ActivityMapper extends BaseMapper<Activity> {
             "ON s.id=sl.target_id\n" +
             "WHERE i.type='postcard'\n" +
             "AND LOCATE( #{name} ,s.`name`) > 0\n" +
+            "ORDER BY s.create_time DESC\n" +
             "LIMIT #{index},#{offset}")
     List<StickyActivity> search(Integer index, Integer offset, String name);
+
+    @Select("ALTER TABLE mini_activity ORDER BY create_time DESC")
+    void resetOrder();
 }

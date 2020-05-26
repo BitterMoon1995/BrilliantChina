@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zh.mini.entity.Scene;
+import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.SceneImage;
 import com.zh.mini.entity.Slider;
 import com.zh.mini.service.ISceneImageService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import util.Info;
 import util.Result;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -81,30 +83,32 @@ public class SceneController {
     @PostMapping("/add")
     public Result add(@RequestBody Scene scene){
         Result result = new Result(new Object(),new Info());
+        result.setData(null);
         String name = scene.getName();
         QueryWrapper<Scene> wrapper = new QueryWrapper<>();
         wrapper.eq("name",name);
         List<Scene> list = service.list(wrapper);
-//        不重名 ID为空 说明是新增
-        if (list.size()==0 && scene.getId()==null){
-            service.saveScene(scene);
-            result.data = null;
+//        ID为空 说明是新增
+        if (scene.getId()==null){
+//            重名，报错
+            if (list.size()!=0){
+                result.info.setCode(400);
+                result.info.setMsg("景区名已存在！");
+                return result;
+            }
+            //设置创建时间
+            scene.setCreateTime(new Date());
+            service.add(scene);
             result.info.setCode(200);
             result.info.setMsg("新增景区成功！");
-            return result;
         }
-//        重名 ID不空 说明修改
-        if (list.size()==1 && !scene.getId().isEmpty()){
-            service.editScene(scene);
-            result.data = null;
+//        ID不为空就是修改，修改不检查重名！！！！！！！
+        else {
+            service.edit(scene);
             result.info.setCode(200);
             result.info.setMsg("编辑景区成功！");
         }
-        else {
-            result.data=null;
-            result.info.setCode(400);
-            result.info.setMsg("景区名已存在！");
-        }
+        service.resetOrder();
         return result;
     }
 
@@ -115,7 +119,8 @@ public class SceneController {
         service.setImgs(scene,id);
         return scene;
     }
-
+//    因为公司在服务器租赁上的预算较少，服务器的总硬盘容量可能只有50G
+//    所以所有的删除操作都采取物理删除
     @DeleteMapping("/del")
     public boolean delScene(@RequestParam String id){
         service.delDetails(id);

@@ -19,13 +19,13 @@ import java.util.List;
  */
 public interface IActivityService extends IService<Activity> {
 
-    void saveActivity(Activity activity);
+    void add(Activity activity);
 
     void resetOrder();
 
     void setImgs(Activity activity, String id);
 
-    void editActivity(Activity activity);
+    void edit(Activity activity);
 
     void delDetails(String id);
 

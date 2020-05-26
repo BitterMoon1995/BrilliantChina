@@ -82,6 +82,7 @@ public class RouteController {
     @PostMapping("/add")
     public Result add(@RequestBody Route route){
         Result result = new Result(new Object(),new Info());
+        result.setData(null);
         String name = route.getName();
         QueryWrapper<Route> wrapper = new QueryWrapper<>();
         wrapper.eq("name",name);
@@ -90,7 +91,6 @@ public class RouteController {
         if (route.getId()==null){
 //            重名，报错
             if (list.size()!=0){
-                result.data=null;
                 result.info.setCode(400);
                 result.info.setMsg("景区名已存在！");
                 return result;
@@ -98,18 +98,16 @@ public class RouteController {
             //设置创建时间
             route.setCreateTime(new Date());
             service.add(route);
-            result.data = null;
             result.info.setCode(200);
             result.info.setMsg("新增景区成功！");
-            return result;
         }
 //        ID不为空就是修改，修改不检查重名！！！！！！！
         else {
             service.edit(route);
-            result.data = null;
             result.info.setCode(200);
             result.info.setMsg("编辑景区成功！");
         }
+        service.resetOrder();
         return result;
     }
 

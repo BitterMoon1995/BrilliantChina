@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -38,6 +39,8 @@ public class Scene implements Serializable {
     private String location;//景区地址
 
     private String username;
+
+    private Date createTime;
 
     @TableField(exist = false)
     private List<SceneImage> introImgs;//详情页轮播图，6张

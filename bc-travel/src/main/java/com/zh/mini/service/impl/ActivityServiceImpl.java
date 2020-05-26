@@ -37,7 +37,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     @Autowired
     ISliderService sliderService;
     @Override
-    public void saveActivity(Activity activity) {
+    public void add(Activity activity) {
         boolean isBlank = StringUtils.isBlank(activity.getId());
         if (isBlank){
             boolean saved = save(activity);
@@ -56,12 +56,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
 
     @Override
     public void resetOrder() {
-        List<Activity> list = this.list();
-        Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
-        list.sort(comparator);
-
-        System.out.print(String.valueOf(list));
-
+        mapper.resetOrder();
     }
 
     @Override
@@ -83,7 +78,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     }
 
     @Override
-    public void editActivity(Activity activity) {
+    public void edit(Activity activity) {
         mapper.updateById(activity);
 
         saveDetails(activity,activity.getId());

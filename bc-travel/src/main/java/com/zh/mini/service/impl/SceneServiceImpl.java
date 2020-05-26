@@ -38,7 +38,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     @Autowired
     ISliderService sliderService;
     @Override
-    public void saveScene(Scene scene) {
+    public void add(Scene scene) {
         boolean isBlank = StringUtils.isBlank(scene.getId());
         if (isBlank){
             boolean saved = save(scene);
@@ -57,12 +57,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
 
     @Override
     public void resetOrder() {
-        List<Scene> list = this.list();
-        Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
-        list.sort(comparator);
-
-        System.out.printf(String.valueOf(list));
-
+        mapper.resetOrder();
     }
 
     @Override
@@ -84,7 +79,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     }
 
     @Override
-    public void editScene(Scene scene) {
+    public void edit(Scene scene) {
         mapper.updateById(scene);
 
         saveDetails(scene,scene.getId());

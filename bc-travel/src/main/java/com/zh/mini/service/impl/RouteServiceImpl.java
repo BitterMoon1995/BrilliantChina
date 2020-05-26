@@ -56,22 +56,20 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
 
     @Override
     public void resetOrder() {
-
-
-        List<Route> list = this.list();
-        QueryWrapper<Route> wrapper = new QueryWrapper<>();
-        mapper.delete(wrapper);
-
-        Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
-        list.sort((a, b) -> {
-            return comparator.compare(a.getName(), b.getName());
-        });
-
-        list.forEach(item->{
-            item.setId("");
-            save(item);
-        });
-
+//        List<Route> list = this.list();
+//        QueryWrapper<Route> wrapper = new QueryWrapper<>();
+//        mapper.delete(wrapper);
+//
+//        Comparator<Object> comparator = Collator.getInstance(Locale.CHINA);
+//        list.sort((a, b) -> {
+//            return comparator.compare(a.getName(), b.getName());
+//        });
+//
+//        list.forEach(item->{
+//            item.setId("");
+//            save(item);
+//        });
+        mapper.resetOrder();
     }
 
     @Override

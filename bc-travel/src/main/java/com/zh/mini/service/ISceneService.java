@@ -16,13 +16,13 @@ import java.util.List;
  */
 public interface ISceneService extends IService<Scene> {
 
-    void saveScene(Scene scene);
+    void add(Scene scene);
 
     void resetOrder();
 
     void setImgs(Scene scene, String id);
 
-    void editScene(Scene scene);
+    void edit(Scene scene);
 
     void delDetails(String id);
 
