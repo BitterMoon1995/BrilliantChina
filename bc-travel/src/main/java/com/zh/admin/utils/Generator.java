@@ -35,7 +35,7 @@ public class Generator {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         // 在指定的子模块下生成。会有WINDOWS弹窗报错，不用管
-        String projectPath = System.getProperty("user.dir");
+        String projectPath = System.getProperty("user.dir")+"/bc-travel";
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("God周周神");
         gc.setOpen(true);
