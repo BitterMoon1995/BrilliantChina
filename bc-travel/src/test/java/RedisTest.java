@@ -17,6 +17,6 @@ public class RedisTest {
     @Test
     public void test1(){
         ValueOperations<String, String> op = stringTemplate.opsForValue();
-        op.append("blackSlave","黑奴大尼哥儿");
+        op.append("blackNigger","黑奴大尼哥儿");
     }
 }

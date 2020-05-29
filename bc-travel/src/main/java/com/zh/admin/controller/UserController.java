@@ -7,6 +7,8 @@ import com.zh.admin.entity.User;
 import com.zh.admin.service.IUserService;
 import com.zh.admin.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
 import util.Info;
@@ -15,6 +17,7 @@ import util.Result;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -29,6 +32,8 @@ import java.util.UUID;
 public class UserController {
     @Autowired
     IUserService service;
+    @Autowired
+    RedisTemplate<String,String> template;
     //登陆
     @PostMapping("/login")
     public Result login(@RequestBody User user){
@@ -47,6 +52,9 @@ public class UserController {
             }
             else {
                 UUID uuid = UUID.randomUUID();
+                ValueOperations<String, String> op = template.opsForValue();
+                //Redis存入token-username对，设置20分钟的过期时间
+                op.set(user.getUsername(),uuid.toString(),60*20, TimeUnit.SECONDS);
                 result.data= String.valueOf(uuid);
                 result.info= new Info("登录成功！", 200);
             }
