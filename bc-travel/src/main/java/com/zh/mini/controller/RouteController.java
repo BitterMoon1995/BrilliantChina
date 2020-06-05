@@ -153,6 +153,18 @@ public class RouteController {
 
         Result result = new Result(new Object(), new Info());
 
+        //校验轮播图，置顶的数量不能大于4
+        QueryWrapper<Slider> sliderQW = new QueryWrapper<>();
+        sliderQW.eq("top",true);
+        int count = sliderService.count(sliderQW);
+
+        if (count>=4){
+            result.data=null;
+            result.info.setCode(400);
+            result.info.setMsg("轮播图置顶数量不能超过四个！");
+            return result;
+        }
+
         //更新名片
         UpdateWrapper<RouteImage> routeUW= new UpdateWrapper<>();
         routeUW.eq("id", stickyRoute.getImgId());
@@ -172,18 +184,6 @@ public class RouteController {
         slider.setOrderNum(stickyRoute.getSliderOrder());
         slider.setUrl(stickyRoute.getUrl());
         sliderService.update(slider,sliderUW);
-
-        //校验轮播图，置顶的数量不能大于4
-        QueryWrapper<Slider> sliderQW = new QueryWrapper<>();
-        sliderQW.eq("top",true);
-        int count = sliderService.count(sliderQW);
-
-        if (count>4){
-            result.data=null;
-            result.info.setCode(400);
-            result.info.setMsg("轮播图置顶数量不能超过四个！");
-            return result;
-        }
 
         result.data=null;
         result.info.setCode(200);

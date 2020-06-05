@@ -1,5 +1,6 @@
 package com.zh.mini.mapper;
 
+import com.zh.mini.bo.SearchResult;
 import com.zh.mini.entity.Scene;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zh.mini.bo.StickyScene;
@@ -65,4 +66,18 @@ public interface SceneMapper extends BaseMapper<Scene> {
 
     @Select("ALTER TABLE mini_scene ORDER BY create_time DESC")
     void resetOrder();
+
+    @Select("SELECT s.name name,s.slogan slogan,i.url url " +
+            "FROM mini_scene s\n" +
+            "LEFT JOIN mini_scene_image i\n" +
+            "ON s.id=i.scene_id\n" +
+            "WHERE (s.name LIKE CONCAT('%',#{s},'%')\n" +
+            "OR s.slogan LIKE CONCAT('%',#{s},'%'))\n" +
+            "AND i.type='postcard'")
+    List<SearchResult> search(String s);
+
+    /*
+    在mybatis里面写就是应该是 like  '%${name} %' 而不是 '%#{name} %'  。
+    ${name} 是不带单引号的，而#{name} 是带单引号的。
+     */
 }

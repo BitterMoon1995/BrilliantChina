@@ -53,8 +53,8 @@ public class UserController {
             else {
                 UUID uuid = UUID.randomUUID();
                 ValueOperations<String, String> op = template.opsForValue();
-                //Redis存入token-username对，设置20分钟的过期时间
-                op.set(user.getUsername(),uuid.toString(),60*20, TimeUnit.SECONDS);
+                //Redis存入token-username对，设置120分钟的过期时间
+                op.set(user.getUsername(),uuid.toString(),60*120, TimeUnit.SECONDS);
                 result.data= String.valueOf(uuid);
                 result.info= new Info("登录成功！", 200);
             }
@@ -81,11 +81,7 @@ public class UserController {
         else {
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.like("username",condition);
-            Page<User> page = new Page<>(pageNum, pageSize,false);
-            List<User> userList = service.page(page, wrapper).getRecords();
-            Collections.sort(userList);
-            vo.setUserList(userList);
-            vo.setTotal(service.count(wrapper));
+            pagedSearch(pageNum, pageSize, vo, wrapper);
         }
         return vo;
     }
@@ -129,5 +125,36 @@ public class UserController {
     @DeleteMapping("/delOne")
     public Boolean delOne(@RequestParam String id){
         return service.removeById(id);
+    }
+
+    //普通管理员只能查到客户
+    @GetMapping("/getClients")
+    public UserVo getClients(@RequestParam Integer pageNum, @RequestParam Integer pageSize
+            , @RequestParam String condition){
+        UserVo vo = new UserVo();
+        //非搜索请求
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        if (condition.isEmpty()){
+            wrapper.eq("role",3);
+            Page<User> page = new Page<>(pageNum, pageSize,false);//第几页 每一页几个 不计数
+            Page<User> userPage = service.page(page,wrapper);
+            List<User> userList = userPage.getRecords();
+            vo.setUserList(userList);
+            vo.setTotal(service.count());
+        }
+        //搜索请求，condition是条件。这里根据用户名搜索
+        else {
+            wrapper.like("username",condition).eq("role",3);
+            pagedSearch(pageNum, pageSize, vo, wrapper);
+        }
+        return vo;
+    }
+
+    private void pagedSearch(@RequestParam Integer pageNum, @RequestParam Integer pageSize, UserVo vo, QueryWrapper<User> wrapper) {
+        Page<User> page = new Page<>(pageNum, pageSize,false);
+        List<User> userList = service.page(page, wrapper).getRecords();
+        Collections.sort(userList);
+        vo.setUserList(userList);
+        vo.setTotal(service.count(wrapper));
     }
 }

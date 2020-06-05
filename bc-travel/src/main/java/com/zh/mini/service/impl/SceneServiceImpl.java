@@ -1,6 +1,7 @@
 package com.zh.mini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zh.mini.bo.SearchResult;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.SceneImage;
 import com.zh.mini.entity.Slider;
@@ -159,5 +160,10 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     @Override
     public List<StickyScene> search(Integer index, Integer offset, String name) {
         return mapper.search(index,offset,name);
+    }
+
+    @Override
+    public List<SearchResult> search(String s) {
+        return mapper.search(s);
     }
 }

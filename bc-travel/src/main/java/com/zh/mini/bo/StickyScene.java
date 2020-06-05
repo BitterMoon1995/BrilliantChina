@@ -10,7 +10,6 @@ public class StickyScene {
     String url;
     Date createTime;
 
-
     Boolean stickyTop;
     Integer stickyOrder;
     String imgId;

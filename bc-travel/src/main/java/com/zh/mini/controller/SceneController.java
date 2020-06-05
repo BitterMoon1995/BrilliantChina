@@ -4,6 +4,7 @@ package com.zh.mini.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zh.mini.bo.SearchResult;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.SceneImage;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import util.Info;
 import util.Result;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -155,6 +157,18 @@ public class SceneController {
 
         Result result = new Result(new Object(), new Info());
 
+        //校验轮播图，置顶的数量不能大于4
+        QueryWrapper<Slider> sliderQW = new QueryWrapper<>();
+        sliderQW.eq("top",true);
+        int count = sliderService.count(sliderQW);
+
+        if (count>=4){
+            result.data=null;
+            result.info.setCode(400);
+            result.info.setMsg("轮播图置顶数量不能超过四个！");
+            return result;
+        }
+
         //更新名片
         UpdateWrapper<SceneImage> sceneUW= new UpdateWrapper<>();
         sceneUW.eq("id", stickyScene.getImgId());
@@ -175,21 +189,14 @@ public class SceneController {
         slider.setUrl(stickyScene.getUrl());
         sliderService.update(slider,sliderUW);
 
-        //校验轮播图，置顶的数量不能大于4
-        QueryWrapper<Slider> sliderQW = new QueryWrapper<>();
-        sliderQW.eq("top",true);
-        int count = sliderService.count(sliderQW);
-
-        if (count>4){
-            result.data=null;
-            result.info.setCode(400);
-            result.info.setMsg("轮播图置顶数量不能超过四个！");
-            return result;
-        }
-
         result.data=null;
         result.info.setCode(200);
         return result;
+    }
+
+    @GetMapping("/search")
+    public List<SearchResult> search(@RequestParam String condition){
+        return service.search(condition);
     }
 
 }

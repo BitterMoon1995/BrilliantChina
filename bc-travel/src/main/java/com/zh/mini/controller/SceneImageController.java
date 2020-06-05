@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author 海琴烟
@@ -31,27 +31,34 @@ import java.util.List;
 public class SceneImageController {
     @Autowired
     ISceneImageService service;
+
     //周神之铃鹿御前
     @RequestMapping("/getSticky")
-    public List<SceneImage> getSticky(){
+    public List<SceneImage> getSticky() {
         QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
-        wrapper.eq("type","postcard")
-               .orderByAsc("order_num");
+        wrapper.eq("type", "postcard")
+                //只取置顶的，排好序
+                .eq("top",true)
+                .orderByAsc("order_num")
+                //.last 拼接末尾的SQL语句，这里用limit限制取出的数量，只取4个
+                .last("limit 0,4");
         return service.list(wrapper);
     }
+
     @RequestMapping("/getIntros")
-    public List<SceneImage> getIntros(String sceneId){
+    public List<SceneImage> getIntros(String sceneId) {
         QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
-        wrapper.eq("type","intros")
-                .eq("scene_id",sceneId)
+        wrapper.eq("type", "intros")
+                .eq("scene_id", sceneId)
                 .orderByAsc("order_num");
         return service.list(wrapper);
     }
+
     @RequestMapping("/getRichText")
-    public SceneImage getRichText(String sceneId){
+    public SceneImage getRichText(String sceneId) {
         QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
-        wrapper.eq("type","richText")
-                .eq("scene_id",sceneId);
+        wrapper.eq("type", "richText")
+                .eq("scene_id", sceneId);
         return service.getOne(wrapper);
     }
 }
