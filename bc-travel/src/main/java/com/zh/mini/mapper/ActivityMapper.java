@@ -1,6 +1,7 @@
 package com.zh.mini.mapper;
 
-import com.zh.mini.bo.StickyActivity;
+import com.zh.mini.bo.SearchResult;
+import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.Activity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.zh.mini.entity.Activity;
@@ -37,7 +38,7 @@ public interface ActivityMapper extends BaseMapper<Activity> {
             "WHERE i.type='postcard'\n" +
             "ORDER BY s.create_time DESC\n" +
             "LIMIT #{index},#{offset}")
-    List<StickyActivity> getSticky(Integer index, Integer offset);
+    List<StickyObject> getSticky(Integer index, Integer offset);
 
     @Select("SELECT s.name,\n" +
             "i.id imgId,i.top stickyTop,i.order_num stickyOrder,i.url,\n" +
@@ -51,8 +52,17 @@ public interface ActivityMapper extends BaseMapper<Activity> {
             "AND LOCATE( #{name} ,s.`name`) > 0\n" +
             "ORDER BY s.create_time DESC\n" +
             "LIMIT #{index},#{offset}")
-    List<StickyActivity> search(Integer index, Integer offset, String name);
+    List<StickyObject> search(Integer index, Integer offset, String name);
 
     @Select("ALTER TABLE mini_activity ORDER BY create_time DESC")
     void resetOrder();
+
+    @Select("SELECT a.name name,a.slogan slogan,i.url url " +
+            "FROM mini_activity a\n" +
+            "LEFT JOIN mini_activity_image i\n" +
+            "ON a.id=i.activity_id\n" +
+            "WHERE (a.name LIKE CONCAT('%',#{s},'%')\n" +
+            "OR a.slogan LIKE CONCAT('%',#{s},'%'))\n" +
+            "AND i.type='postcard'")
+    List<SearchResult> search(String s);
 }

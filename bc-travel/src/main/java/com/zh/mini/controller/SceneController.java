@@ -12,8 +12,8 @@ import com.zh.mini.entity.Slider;
 import com.zh.mini.service.ISceneImageService;
 import com.zh.mini.service.ISceneService;
 import com.zh.mini.service.ISliderService;
-import com.zh.mini.bo.StickyScene;
-import com.zh.mini.vo.StickySceneVo;
+import com.zh.mini.bo.StickyObject;
+import com.zh.mini.vo.StickyObjectVo;
 import com.zh.mini.vo.SceneVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -130,10 +130,10 @@ public class SceneController {
     }
 
     @GetMapping("/getSticky")
-    public StickySceneVo getSticky(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
+    public StickyObjectVo getSticky(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
                                   @RequestParam String condition){
-        StickySceneVo sceneStickyVo = new StickySceneVo();
-        List<StickyScene> stickyList;
+        StickyObjectVo sceneStickyVo = new StickyObjectVo();
+        List<StickyObject> stickyList;
 
         if (condition.isEmpty()) {
             stickyList = service.getSticky((pageNum - 1) * pageSize, pageSize);
@@ -153,7 +153,7 @@ public class SceneController {
     ISliderService sliderService;
 
     @PostMapping("/change")
-    public Result change(@RequestBody StickyScene stickyScene){
+    public Result change(@RequestBody StickyObject stickyObject){
 
         Result result = new Result(new Object(), new Info());
 
@@ -162,7 +162,18 @@ public class SceneController {
         sliderQW.eq("top",true);
         int count = sliderService.count(sliderQW);
 
-        if (count>=4){
+        if (count>=4 && stickyObject.getSliderTop()){
+            result.data=null;
+            result.info.setCode(400);
+            result.info.setMsg("轮播图置顶数量不能超过四个！");
+            return result;
+        }
+
+        //校验楼层图，置顶的数量不能大于4
+        QueryWrapper<SceneImage> imageQW = new QueryWrapper<>();
+        imageQW.eq("top",true).eq("type","postcard");
+        int count1 = imageService.count(imageQW);
+        if (count1>=4 && stickyObject.getStickyTop()){
             result.data=null;
             result.info.setCode(400);
             result.info.setMsg("轮播图置顶数量不能超过四个！");
@@ -171,22 +182,22 @@ public class SceneController {
 
         //更新名片
         UpdateWrapper<SceneImage> sceneUW= new UpdateWrapper<>();
-        sceneUW.eq("id", stickyScene.getImgId());
+        sceneUW.eq("id", stickyObject.getImgId());
 
-        SceneImage sceneImage = imageService.getById(stickyScene.getImgId());
-        sceneImage.setTop(stickyScene.getStickyTop());
-        sceneImage.setOrderNum(stickyScene.getStickyOrder());
-        sceneImage.setUrl(stickyScene.getUrl());
+        SceneImage sceneImage = imageService.getById(stickyObject.getImgId());
+        sceneImage.setTop(stickyObject.getStickyTop());
+        sceneImage.setOrderNum(stickyObject.getStickyOrder());
+        sceneImage.setUrl(stickyObject.getUrl());
         imageService.update(sceneImage,sceneUW);
 
         //更新首页轮播图
         UpdateWrapper<Slider> sliderUW = new UpdateWrapper<>();
-        sliderUW.eq("id",stickyScene.getSliderId());
+        sliderUW.eq("id",stickyObject.getSliderId());
 
-        Slider slider = sliderService.getById(stickyScene.getSliderId());
-        slider.setTop(stickyScene.getSliderTop());
-        slider.setOrderNum(stickyScene.getSliderOrder());
-        slider.setUrl(stickyScene.getUrl());
+        Slider slider = sliderService.getById(stickyObject.getSliderId());
+        slider.setTop(stickyObject.getSliderTop());
+        slider.setOrderNum(stickyObject.getSliderOrder());
+        slider.setUrl(stickyObject.getUrl());
         sliderService.update(slider,sliderUW);
 
         result.data=null;
@@ -199,4 +210,8 @@ public class SceneController {
         return service.search(condition);
     }
 
+    @GetMapping("/showList")
+    public List<SearchResult> showList(){
+        return service.showList();
+    }
 }

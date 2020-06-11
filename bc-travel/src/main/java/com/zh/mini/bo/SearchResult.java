@@ -7,4 +7,5 @@ public class SearchResult {
     String name;
     String slogan;
     String url;
+    String src;
 }

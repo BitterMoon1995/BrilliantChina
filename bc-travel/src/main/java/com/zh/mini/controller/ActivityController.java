@@ -4,14 +4,15 @@ package com.zh.mini.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zh.mini.bo.StickyActivity;
+import com.zh.mini.bo.SearchResult;
+import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.*;
 import com.zh.mini.entity.Activity;
 import com.zh.mini.service.IActivityService;
 import com.zh.mini.service.IActivityImageService;
 import com.zh.mini.service.ISliderService;
 import com.zh.mini.vo.ActivityVo;
-import com.zh.mini.vo.StickyActivityVo;
+import com.zh.mini.vo.StickyObjectVo;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -125,10 +126,10 @@ public class ActivityController {
     }
 
     @GetMapping("/getSticky")
-    public StickyActivityVo getSticky(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
+    public StickyObjectVo getSticky(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
                                    @RequestParam String condition){
-        StickyActivityVo activityStickyVo = new StickyActivityVo();
-        List<StickyActivity> stickyList;
+        StickyObjectVo activityStickyVo = new StickyObjectVo();
+        List<StickyObject> stickyList;
 
         if (condition.isEmpty()) {
             stickyList = service.getSticky((pageNum - 1) * pageSize, pageSize);
@@ -148,7 +149,7 @@ public class ActivityController {
     ISliderService sliderService;
 
     @PostMapping("/change")
-    public Result change(@RequestBody StickyActivity stickyActivity){
+    public Result change(@RequestBody StickyObject stickyObject){
 
         Result result = new Result(new Object(), new Info());
 
@@ -157,7 +158,18 @@ public class ActivityController {
         sliderQW.eq("top",true);
         int count = sliderService.count(sliderQW);
 
-        if (count>=4){
+        if (count>=4 && stickyObject.getSliderTop()){
+            result.data=null;
+            result.info.setCode(400);
+            result.info.setMsg("轮播图置顶数量不能超过四个！");
+            return result;
+        }
+
+        //校验楼层图，置顶的数量不能大于4
+        QueryWrapper<ActivityImage> imageQW = new QueryWrapper<>();
+        imageQW.eq("top",true).eq("type","postcard");
+        int count1 = imageService.count(imageQW);
+        if (count1>=4 && stickyObject.getStickyTop()){
             result.data=null;
             result.info.setCode(400);
             result.info.setMsg("轮播图置顶数量不能超过四个！");
@@ -166,26 +178,31 @@ public class ActivityController {
 
         //更新名片
         UpdateWrapper<ActivityImage> activityUW= new UpdateWrapper<>();
-        activityUW.eq("id", stickyActivity.getImgId());
+        activityUW.eq("id", stickyObject.getImgId());
 
-        ActivityImage activityImage = imageService.getById(stickyActivity.getImgId());
-        activityImage.setTop(stickyActivity.getStickyTop());
-        activityImage.setOrderNum(stickyActivity.getStickyOrder());
-        activityImage.setUrl(stickyActivity.getUrl());
+        ActivityImage activityImage = imageService.getById(stickyObject.getImgId());
+        activityImage.setTop(stickyObject.getStickyTop());
+        activityImage.setOrderNum(stickyObject.getStickyOrder());
+        activityImage.setUrl(stickyObject.getUrl());
         imageService.update(activityImage,activityUW);
 
         //更新首页轮播图
         UpdateWrapper<Slider> sliderUW = new UpdateWrapper<>();
-        sliderUW.eq("id",stickyActivity.getSliderId());
+        sliderUW.eq("id",stickyObject.getSliderId());
 
-        Slider slider = sliderService.getById(stickyActivity.getSliderId());
-        slider.setTop(stickyActivity.getSliderTop());
-        slider.setOrderNum(stickyActivity.getSliderOrder());
-        slider.setUrl(stickyActivity.getUrl());
+        Slider slider = sliderService.getById(stickyObject.getSliderId());
+        slider.setTop(stickyObject.getSliderTop());
+        slider.setOrderNum(stickyObject.getSliderOrder());
+        slider.setUrl(stickyObject.getUrl());
         sliderService.update(slider,sliderUW);
 
         result.data=null;
         result.info.setCode(200);
         return result;
+    }
+
+    @GetMapping("/search")
+    public List<SearchResult> search(@RequestParam String condition){
+        return service.search(condition);
     }
 }

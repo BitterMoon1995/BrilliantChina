@@ -1,7 +1,7 @@
 package com.zh.mini.service;
 
-import com.zh.mini.bo.StickyActivity;
-import com.zh.mini.bo.StickyScene;
+import com.zh.mini.bo.SearchResult;
+import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.Activity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zh.mini.entity.Route;
@@ -33,7 +33,9 @@ public interface IActivityService extends IService<Activity> {
 
     List<Activity> allSearch(String name);
 
-    List<StickyActivity> getSticky(Integer index, Integer offset);
+    List<StickyObject> getSticky(Integer index, Integer offset);
 
-    List<StickyActivity> search(Integer index, Integer offset, String name);
+    List<StickyObject> search(Integer index, Integer offset, String name);
+
+    List<SearchResult> search(String s);
 }

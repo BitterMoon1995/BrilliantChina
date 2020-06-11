@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class StickyScene {
+public class StickyObject {
     String name;
     String url;
     Date createTime;

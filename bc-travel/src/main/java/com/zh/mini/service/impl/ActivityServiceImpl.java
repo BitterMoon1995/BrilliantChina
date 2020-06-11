@@ -1,7 +1,8 @@
 package com.zh.mini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zh.mini.bo.StickyActivity;
+import com.zh.mini.bo.SearchResult;
+import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.Activity;
 import com.zh.mini.entity.ActivityImage;
 import com.zh.mini.entity.Slider;
@@ -151,13 +152,18 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     }
 
     @Override
-    public List<StickyActivity> getSticky(Integer index, Integer offset) {
+    public List<StickyObject> getSticky(Integer index, Integer offset) {
         return mapper.getSticky(index,offset);
     }
 
     @Override
-    public List<StickyActivity> search(Integer index, Integer offset, String name) {
+    public List<StickyObject> search(Integer index, Integer offset, String name) {
         return mapper.search(index,offset,name);
+    }
+
+    @Override
+    public List<SearchResult> search(String s) {
+        return mapper.search(s);
     }
 
 

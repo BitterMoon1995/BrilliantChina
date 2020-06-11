@@ -2,6 +2,7 @@ package com.zh.mini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zh.mini.bo.SearchResult;
+import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.SceneImage;
 import com.zh.mini.entity.Slider;
@@ -10,7 +11,6 @@ import com.zh.mini.service.ISceneImageService;
 import com.zh.mini.service.ISceneService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zh.mini.service.ISliderService;
-import com.zh.mini.bo.StickyScene;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -153,17 +153,22 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     }
 
     @Override
-    public List<StickyScene> getSticky(Integer index, Integer offset) {
+    public List<StickyObject> getSticky(Integer index, Integer offset) {
         return mapper.getSticky(index,offset);
     }
 
     @Override
-    public List<StickyScene> search(Integer index, Integer offset, String name) {
+    public List<StickyObject> search(Integer index, Integer offset, String name) {
         return mapper.search(index,offset,name);
     }
 
     @Override
     public List<SearchResult> search(String s) {
         return mapper.search(s);
+    }
+
+    @Override
+    public List<SearchResult> showList() {
+        return mapper.showList();
     }
 }

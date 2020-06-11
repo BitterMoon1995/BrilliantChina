@@ -3,7 +3,7 @@ package com.zh.mini.service;
 import com.zh.mini.bo.SearchResult;
 import com.zh.mini.entity.Scene;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zh.mini.bo.StickyScene;
+import com.zh.mini.bo.StickyObject;
 
 import java.util.List;
 
@@ -31,10 +31,12 @@ public interface ISceneService extends IService<Scene> {
 
     List<Scene> allSearch(String name);
 
-    List<StickyScene> getSticky(Integer index, Integer offset);
+    List<StickyObject> getSticky(Integer index, Integer offset);
 
-    List<StickyScene> search(Integer index, Integer offset, String name);
+    List<StickyObject> search(Integer index, Integer offset, String name);
 
     List<SearchResult> search(String s);
+
+    List<SearchResult> showList();
 
 }

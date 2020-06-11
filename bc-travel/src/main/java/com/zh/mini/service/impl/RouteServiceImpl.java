@@ -1,8 +1,8 @@
 package com.zh.mini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zh.mini.bo.StickyRoute;
-import com.zh.mini.bo.StickyScene;
+import com.zh.mini.bo.SearchResult;
+import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.*;
 import com.zh.mini.mapper.RouteMapper;
 import com.zh.mini.service.IRouteImageService;
@@ -164,12 +164,17 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
     }
 
     @Override
-    public List<StickyRoute> getSticky(Integer index, Integer offset) {
+    public List<StickyObject> getSticky(Integer index, Integer offset) {
         return mapper.getSticky(index, offset);
     }
 
     @Override
-    public List<StickyRoute> search(Integer index, Integer offset, String name) {
+    public List<StickyObject> search(Integer index, Integer offset, String name) {
         return mapper.search(index,offset,name);
+    }
+
+    @Override
+    public List<SearchResult> search(String s) {
+        return mapper.search(s);
     }
 }
