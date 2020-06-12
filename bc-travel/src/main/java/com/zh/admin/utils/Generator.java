@@ -54,7 +54,7 @@ public class Generator {
         // 包配置
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(scanner("你的包名"));
-        pc.setParent("starry");//你哪个父目录下创建包
+        pc.setParent("com.zh");//你哪个父目录下创建包
         mpg.setPackageInfo(pc);
 
         // 自定义配置
