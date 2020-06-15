@@ -1,8 +1,11 @@
 package com.zh.admin.controller;
 
 
+import com.zh.admin.entity.VipCard;
 import com.zh.admin.service.IVipCardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -16,13 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-06-12
  */
 @RestController
-@RequestMapping("/admin/vip-card")
+@RequestMapping("/vip/vip-card")
 public class VipCardController {
     @Autowired
     IVipCardService service;
 
-
-    public void saveVipInfo(){
-
+    @PostMapping("/save")
+    public void saveVipInfo(@RequestBody VipCard vipCard){
+        System.out.println(vipCard);
     }
 }
