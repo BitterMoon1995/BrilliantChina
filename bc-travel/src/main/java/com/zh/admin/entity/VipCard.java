@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -63,17 +65,11 @@ public class VipCard implements Serializable {
     /**
      * 办卡/续卡时间
      */
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * 办卡套餐时长
      */
     private Integer duration;
-
-    /**
-     * 微信号
-     */
-    private String wechatId;
-
 
 }
