@@ -72,4 +72,5 @@ public class VipCard implements Serializable {
      */
     private Integer duration;
 
+    private Integer gender;
 }

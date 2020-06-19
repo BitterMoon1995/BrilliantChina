@@ -11,6 +11,7 @@
         <module name="bc-admin" />
         <module name="bc-common" />
         <module name="fastdfs" />
+        <module name="wxpay-sdk" />
       </profile>
     </annotationProcessing>
   </component>
@@ -19,6 +20,7 @@
       <module name="bc-admin" options="-parameters" />
       <module name="bc-common" options="" />
       <module name="bc-travel" options="-parameters" />
+      <module name="wxpay-sdk" options="-parameters" />
     </option>
   </component>
 </project>
