@@ -27,6 +27,8 @@ public class VipCard implements Serializable {
 
     private String id;
 
+    private String openid;
+
     /**
      * 电话号码
      */
@@ -68,9 +70,11 @@ public class VipCard implements Serializable {
     private Date createTime;
 
     /**
-     * 办卡套餐时长
+     * 剩余会员天数
      */
-    private Integer duration;
+    private Integer remainingDays;
 
     private Integer gender;
+
+    private Date birthday;
 }
