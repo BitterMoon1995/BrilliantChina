@@ -1,5 +1,6 @@
 package com.github.wxpay.sdk;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public abstract class WXPayConfig {
@@ -35,7 +36,7 @@ public abstract class WXPayConfig {
      *
      * @return 商户证书内容
      */
-    abstract InputStream getCertStream();
+    abstract InputStream getCertStream() throws FileNotFoundException;
 
     /**
      * HTTP(S) 连接超时时间，单位毫秒

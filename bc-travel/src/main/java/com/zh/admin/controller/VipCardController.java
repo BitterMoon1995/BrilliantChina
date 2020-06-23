@@ -2,6 +2,8 @@ package com.zh.admin.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.wxpay.sdk.WXPay;
+import com.github.wxpay.sdk.WXPayConfigImpl;
 import com.mysql.cj.protocol.x.Notice;
 import com.zh.admin.entity.VipCard;
 import com.zh.admin.service.IVipCardService;
@@ -72,4 +74,12 @@ public class VipCardController {
         }
     }
 
+    @PostMapping("/pay")
+    public Map<String,String> pay(@RequestBody String openid) throws Exception {
+        System.out.println(openid);
+
+        WXPay wxPay = new WXPay(new WXPayConfigImpl());
+
+        return null;
+    }
 }

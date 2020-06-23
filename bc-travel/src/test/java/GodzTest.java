@@ -1,4 +1,5 @@
 import com.alibaba.fastjson.JSONObject;
+import com.github.wxpay.sdk.WXPay;
 import com.mysql.cj.protocol.x.Notice;
 import com.zh.RunMini;
 import com.zh.admin.utils.HttpsUtils;
@@ -14,6 +15,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,19 +72,23 @@ public class GodzTest {
 //        System.out.println(calendar.getTime());
 
         //调用第三方接口
-        String url = "https://api.weixin.qq.com/sns/jscode2session";
+//        String url = "https://api.weixin.qq.com/sns/jscode2session";
+//
+//        Map<String, String> params = new HashMap<String, String>();
+//        params.put("appid","wxa9e6f1fa364a24ab");
+//        params.put("secret","7db719b2cead5dab3af40032612f71d0");
+//        params.put("js_code","001TLLyT0vf9212FYVwT0yaRyT0TLLy8");
+//        params.put("grant_type","authorization_code");
+//
+//        String s = HttpsUtils.get(url, params, null);
+//        Object zxtsima = JSONObject.parse(s);
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("appid","wxa9e6f1fa364a24ab");
-        params.put("secret","7db719b2cead5dab3af40032612f71d0");
-        params.put("js_code","001TLLyT0vf9212FYVwT0yaRyT0TLLy8");
-        params.put("grant_type","authorization_code");
+        //文件流读resources文件
+        File file = new File("/apiclient_cert.p12");
+        System.out.println(file.getAbsolutePath());
 
-//        RestTemplate template = new RestTemplate();
-//        Notice result = template.getForObject(url,Notice.class,params);
-//        System.out.println(result);
-        String s = HttpsUtils.get(url, params, null);
-        Object zxtsima = JSONObject.parse(s);
+        FileInputStream fileInputStream = new FileInputStream(file);
 
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
     }
 }
