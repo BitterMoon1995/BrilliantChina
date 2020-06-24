@@ -9,10 +9,14 @@ import com.zh.admin.entity.VipCard;
 import com.zh.admin.service.IVipCardService;
 import com.zh.admin.utils.GodzSUtils;
 import com.zh.admin.utils.HttpsUtils;
+import com.zh.admin.wxpay.Openid;
+import com.zh.admin.wxpay.PayVo;
+import com.zh.admin.wxpay.UnifiedPayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,11 +79,9 @@ public class VipCardController {
     }
 
     @PostMapping("/pay")
-    public Map<String,String> pay(@RequestBody String openid) throws Exception {
-        System.out.println(openid);
-
-        WXPay wxPay = new WXPay(new WXPayConfigImpl());
-
-        return null;
+    public PayVo pay(@RequestBody Openid openid, HttpServletRequest request) throws Exception {
+        String theShy = openid.getOpenid();
+        PayVo vo = UnifiedPayUtil.unifiedPay(theShy);
+        return vo;
     }
 }
