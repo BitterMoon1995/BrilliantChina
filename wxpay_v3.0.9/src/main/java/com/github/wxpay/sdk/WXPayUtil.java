@@ -207,14 +207,20 @@ public class WXPayUtil {
         }
         sb.append("key=").append(key);
 
-        System.out.println("--------------------ready nigger---------------------------");
+        System.out.println("-----------调用签名生成方法-----------");
         System.out.println(sb);
 
         if (SignType.MD5.equals(signType)) {
-            return MD5(sb.toString()).toUpperCase();
+            String s = MD5(sb.toString()).toUpperCase();
+            System.out.println("MD5");
+            System.out.println(s);
+            return s;
         }
         else if (SignType.HMACSHA256.equals(signType)) {
-            return HMACSHA256(sb.toString(), key);
+            String s = HMACSHA256(sb.toString(), key);
+            System.out.println("HMAC");
+            System.out.println(s);
+            return s;
         }
         else {
             throw new Exception(String.format("Invalid sign_type: %s", signType));

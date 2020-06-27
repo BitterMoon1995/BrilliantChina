@@ -16,6 +16,7 @@ public class WXPay {
 
     public WXPay(final WXPayConfig config) throws Exception {
         this(config, null, true, false);
+//        this.signType=SignType.MD5;
     }
 
     public WXPay(final WXPayConfig config, final boolean autoReport) throws Exception {

@@ -7,13 +7,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="fastdfs-client-java" />
+        <module name="wxpay-sdk" />
         <module name="bc-travel" />
+        <module name="fastdfs" />
         <module name="bc-admin" />
         <module name="bc-common" />
-        <module name="fastdfs" />
-        <module name="wxpay-sdk" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="8" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

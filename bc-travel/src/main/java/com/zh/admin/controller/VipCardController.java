@@ -48,7 +48,6 @@ public class VipCardController {
 
         String s = HttpsUtils.get(url, params, null);
         Object zxtsima = JSONObject.parse(s);
-        System.out.println(zxtsima);
         return zxtsima;
     }
 
