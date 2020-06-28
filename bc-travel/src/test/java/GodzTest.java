@@ -84,11 +84,17 @@ public class GodzTest {
 //        Object zxtsima = JSONObject.parse(s);
 
         //文件流读resources文件
-        File file = new File("/apiclient_cert.p12");
-        System.out.println(file.getAbsolutePath());
+//        File file = new File("/apiclient_cert.p12");
+//        System.out.println(file.getAbsolutePath());
+//
+//        FileInputStream fileInputStream = new FileInputStream(file);
+//
+//        BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
 
-        FileInputStream fileInputStream = new FileInputStream(file);
-
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+        //充值成功，续一年
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.YEAR,calendar.get(Calendar.YEAR)+1);
+        System.out.println(calendar.getTime());
     }
 }

@@ -65,9 +65,9 @@ public class VipCard implements Serializable {
     private String superiorId;
 
     /**
-     * 办卡/续卡时间
+     * 到期时间！！！！！！！
      */
-    private Date createTime;
+    private Date expirationTime;
 
     /**
      * 剩余会员天数
