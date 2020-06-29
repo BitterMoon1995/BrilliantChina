@@ -124,6 +124,7 @@ public class VipCardController {
                 expTime.set(Calendar.YEAR,expTime.get(Calendar.YEAR)+1);
                 vipCard.setExpirationTime(expTime.getTime());
             }
+            redisTemplate.delete(openid);
             service.updateById(vipCard);
         }
     }
