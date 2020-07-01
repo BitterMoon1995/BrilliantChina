@@ -87,6 +87,15 @@ public class VipCardController {
             service.save(vipCard);
         }
     }
+    @PostMapping("/edit")
+    public void edit(String phone,String address,String photoSrc,String openid){
+        System.out.println(phone);
+        VipCard vipCard = getByOpenid(openid);
+        if (!phone.isEmpty()) vipCard.setPhone(phone);
+        if (!address.isEmpty()) vipCard.setAddress(address);
+        if (!photoSrc.isEmpty()) vipCard.setPhotoSrc(photoSrc);
+        service.updateById(vipCard);
+    }
 
     @PostMapping("/pay")
     public PayVo pay(@RequestBody Openid openid, HttpServletRequest request) throws Exception {
@@ -131,6 +140,12 @@ public class VipCardController {
 
     @GetMapping("/getVipInfo")
     public VipCard getVipInfo(String openid){
+        QueryWrapper<VipCard> wrapper = new QueryWrapper<>();
+        wrapper.eq("openid",openid);
+        return service.getOne(wrapper);
+    }
+
+    public VipCard getByOpenid(String openid){
         QueryWrapper<VipCard> wrapper = new QueryWrapper<>();
         wrapper.eq("openid",openid);
         return service.getOne(wrapper);

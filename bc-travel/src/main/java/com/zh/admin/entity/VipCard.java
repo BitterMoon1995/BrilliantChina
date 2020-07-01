@@ -77,4 +77,9 @@ public class VipCard implements Serializable {
     private Integer gender;
 
     private Date birthday;
+
+    /*
+        一天只能改一次，防止乱搞
+     */
+    private Data editTime;
 }
