@@ -81,5 +81,5 @@ public class VipCard implements Serializable {
     /*
         一天只能改一次，防止乱搞
      */
-    private Data editTime;
+    private Date editTime;
 }

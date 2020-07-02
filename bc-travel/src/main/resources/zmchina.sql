@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 01/07/2020 18:05:35
+ Date: 02/07/2020 18:08:18
 */
 
 SET NAMES utf8mb4;
@@ -405,8 +405,8 @@ CREATE TABLE `vip_card`  (
   `address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '收货地址',
   `real_name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '真名',
   `id_num` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '身份证号',
-  `photo_src` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '真人照片',
-  `promo_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '6位推广码',
+  `photo_src` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '真人照片',
+  `promo_code` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '6位推广码',
   `superior_id` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '上级ID',
   `expiration_time` datetime(0) NULL DEFAULT NULL COMMENT '到期时间！！！！',
   `remaining_days` int(0) NULL DEFAULT NULL COMMENT '剩余天数',
@@ -419,9 +419,8 @@ CREATE TABLE `vip_card`  (
 -- Records of vip_card
 -- ----------------------------
 INSERT INTO `vip_card` VALUES ('1ad25b61b05a35d057fc920fc52b9c54', NULL, '18683951862', '公主殿', '周薇儿', '510704199506011511', 'http://192.168.156.128//group1/M00/00/07/wKicgF7sbySAUo7CACFwR8gkRy8533.jpg', 't54rpl', NULL, NULL, 153, NULL, NULL, NULL);
-INSERT INTO `vip_card` VALUES ('d0a046bf197fedd1b9d6bf774a7a1396', NULL, '18688888888', '绵阳射洪', '周小薇', '51888', 'http://192.168.156.128//group1/M00/00/07/wKicgF7sg8CAKKTzADDRgJ7bLLo127.jpg', 'ZXWbho', NULL, NULL, 0, 0, NULL, NULL);
-INSERT INTO `vip_card` VALUES ('6f89bea02ab74636be9fa5a212d8e135', NULL, '3', '3', '3', '510704200006048888', 'http://192.168.156.128//group1/M00/00/07/wKicgF7wG3aAM1TFAAMW2sZ45Ts658.jpg', '349ikb', NULL, NULL, 0, 0, '2000-06-04 10:46:14', NULL);
-INSERT INTO `vip_card` VALUES ('df16490e372d3943eac3f3a15640610b', 'oXAfJ5YrJ6RIuEzF5ZeADeRtqDJ0', '8848', '777777777777777777', '女神周薇儿', '510704199506011511', 'undefined', 'NSZWEm', NULL, '2021-07-01 15:13:38', NULL, 0, '1995-06-01 14:38:03', NULL);
+INSERT INTO `vip_card` VALUES ('d0a046bf197fedd1b9d6bf774a7a1396', 'dsacsacs', '18688888888', '绵阳射洪', '周小薇', '51888', 'http://192.168.156.128//group1/M00/00/07/wKicgF7sg8CAKKTzADDRgJ7bLLo127.jpg', 'JZHqjsj6', NULL, NULL, 0, 0, NULL, NULL);
+INSERT INTO `vip_card` VALUES ('6f89bea02ab74636be9fa5a212d8e135', 'oXAfJ5YrJ6RIuEzF5ZeADeRtqDJ0', '3', '3', '3', '510704198906048888', 'http://192.168.156.128//group1/M00/00/07/wKicgF7wG3aAM1TFAAMW2sZ45Ts658.jpg', '4396smfw', NULL, '2021-07-02 16:43:26', 0, 0, '2000-06-04 10:46:14', NULL);
 
 -- ----------------------------
 -- View structure for nigger

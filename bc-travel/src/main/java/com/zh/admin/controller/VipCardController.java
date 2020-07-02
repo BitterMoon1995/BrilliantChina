@@ -3,6 +3,7 @@ package com.zh.admin.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfigImpl;
 import com.mysql.cj.protocol.x.Notice;
@@ -13,6 +14,7 @@ import com.zh.admin.utils.HttpsUtils;
 import com.zh.admin.wxpay.Openid;
 import com.zh.admin.wxpay.PayVo;
 import com.zh.admin.wxpay.UnifiedPayUtil;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,43 +61,61 @@ public class VipCardController {
         return zxtsima;
     }
 
-
+    //新会员注册
     @PostMapping("/save")
-    public void saveVipInfo(@RequestBody VipCard vipCard){
-        //新会员注册
-        if (vipCard.getId()==null){
-            //生成推荐码
-            String name = vipCard.getRealName();
-            String firstPinYin = GodzSUtils.getFirstPinYin(name);
+    public boolean saveVipInfo(@RequestBody VipCard vipCard){
+        //生成推荐码
+        String name = vipCard.getRealName();
+        String firstPinYin = GodzSUtils.getFirstPinYin(name);
 
-            String randomS = GodzSUtils.getCharAndNum(6-firstPinYin.length());
+        String randomS = GodzSUtils.getCharAndNum(8-firstPinYin.length());
 
-            vipCard.setPromoCode(firstPinYin+randomS);
+        vipCard.setPromoCode(firstPinYin+randomS);
 
-            //生成生日
-            Calendar calendar = Calendar.getInstance();
-            String idNum = vipCard.getIdNum();
-            String year = idNum.substring(6, 10);
-            String month = idNum.substring(11, 12);
-            String day = idNum.substring(13, 14);
-            calendar.set(Integer.parseInt(year),Integer.parseInt(month)-1,Integer.parseInt(day));
-            vipCard.setBirthday(calendar.getTime());
+        //生成生日
+        Calendar calendar = Calendar.getInstance();
+        String idNum = vipCard.getIdNum();
+        String year = idNum.substring(6, 10);
+        String month = idNum.substring(11, 12);
+        String day = idNum.substring(13, 14);
+        calendar.set(Integer.parseInt(year),Integer.parseInt(month)-1,Integer.parseInt(day));
+        vipCard.setBirthday(calendar.getTime());
 
-            Calendar calendar2 = Calendar.getInstance();
-            calendar2.set(1989,5,4);
-            vipCard.setExpirationTime(calendar2.getTime());
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(1989,5,4);
+        vipCard.setExpirationTime(calendar2.getTime());
 
-            service.save(vipCard);
-        }
+        return service.save(vipCard);
     }
     @PostMapping("/edit")
-    public void edit(String phone,String address,String photoSrc,String openid){
-        System.out.println(phone);
+    public Integer edit(@RequestParam String phone,@RequestParam String address,
+                        @RequestParam String photoSrc,@RequestParam String openid){
         VipCard vipCard = getByOpenid(openid);
+        Date editTime = vipCard.getEditTime();
+        if (editTime!=null){
+            Long editStamp = new Timestamp(editTime.getTime()).getTime();
+            Long currentStamp = new Timestamp(new Date().getTime()).getTime();
+            long dif = (currentStamp - editStamp) / 86400000 ;
+            if (dif < 1) return 401; //修改间隔小于一天
+        }
+
         if (!phone.isEmpty()) vipCard.setPhone(phone);
         if (!address.isEmpty()) vipCard.setAddress(address);
         if (!photoSrc.isEmpty()) vipCard.setPhotoSrc(photoSrc);
-        service.updateById(vipCard);
+        vipCard.setEditTime(new Date());
+        boolean b = service.updateById(vipCard);
+        if (b) return 200;  //完结撒花  ✿✿ヽ(°▽°)ノ✿
+        else return 500; //服务器错误
+    }
+
+    @PostMapping("/verifyPmCode")
+    public Integer verifyPmCode(@RequestParam String openid,@RequestParam String pmCode){
+        if (openid.isEmpty() || pmCode.isEmpty()) return 415;
+        VipCard i = getByOpenid(openid);
+        VipCard she = getByPmCode(pmCode);
+        if (i == null || she == null) return 400;
+        if (she.getOpenid().equals(openid)) return 403;
+        return 200;
     }
 
     @PostMapping("/pay")
@@ -140,14 +161,17 @@ public class VipCardController {
 
     @GetMapping("/getVipInfo")
     public VipCard getVipInfo(String openid){
-        QueryWrapper<VipCard> wrapper = new QueryWrapper<>();
-        wrapper.eq("openid",openid);
-        return service.getOne(wrapper);
+        return getByOpenid(openid);
     }
 
     public VipCard getByOpenid(String openid){
         QueryWrapper<VipCard> wrapper = new QueryWrapper<>();
         wrapper.eq("openid",openid);
+        return service.getOne(wrapper);
+    }
+    public VipCard getByPmCode(String pmCode){
+        QueryWrapper<VipCard> wrapper = new QueryWrapper<>();
+        wrapper.eq("promo_code",pmCode);
         return service.getOne(wrapper);
     }
 }
