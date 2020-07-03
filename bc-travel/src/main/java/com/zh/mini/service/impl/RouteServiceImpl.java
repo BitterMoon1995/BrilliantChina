@@ -37,21 +37,14 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
     @Autowired
     ISliderService sliderService;
     @Override
-    public void add(Route route) {
-        boolean isBlank = StringUtils.isBlank(route.getId());
-        if (isBlank){
-            boolean saved = save(route);
-            String id = "";
-            if (saved) {
-                id = route.getId();
-                saveDetails(route, id);
-            }
+    public Integer add(Route route) {
+        boolean saved = save(route);
+        String id = "";
+        if (saved) {
+            id = route.getId();
+            saveDetails(route, id);
         }
-        else {
-            updateById(route);
-            saveDetails(route, route.getId());
-        }
-
+        return 666;
     }
 
     @Override
@@ -91,10 +84,27 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
     }
 
     @Override
-    public void edit(Route route) {
+    public Integer edit(Route route) {
+        Route she = mapper.selectById(route.getId());
+        //修改时景区名防重
+        String name = route.getName();
+        QueryWrapper<Route> wrapper = new QueryWrapper<>();
+        wrapper.eq("name",name);
+        Integer count = mapper.selectCount(wrapper);
+        if (!she.getName().equals(name) && count>=1) return 400;
+
+        //文本信息增量修改
+//        if (!StringUtils.isBlank(route.getName())) she.setName(route.getName());
+//        if (!StringUtils.isBlank(route.getLocation())) she.setLocation(route.getLocation());
+//        if (!StringUtils.isBlank(route.getSlogan())) she.setSlogan(route.getSlogan());
+//        if (!StringUtils.isBlank(route.getLevel())) she.setLevel(route.getLevel());
+//        if (route.getPrice()!=0) she.setPrice(route.getPrice());
+//
+//        updateById(she);
         mapper.updateById(route);
 
         saveDetails(route,route.getId());
+        return 666;
     }
 
     void saveDetails(Route route, String id){

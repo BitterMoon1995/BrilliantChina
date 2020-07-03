@@ -106,9 +106,15 @@ public class SceneController {
         }
 //        ID不为空就是修改，修改不检查重名！！！！！！！
         else {
-            service.edit(scene);
-            result.info.setCode(200);
-            result.info.setMsg("编辑景区成功！");
+            Integer edit = service.edit(scene);
+            if (edit == 400){
+                result.info.setCode(400);
+                result.info.setMsg("景区名已存在！");
+            }
+            else {
+                result.info.setCode(200);
+                result.info.setMsg("编辑景区成功！");
+            }
         }
         service.resetOrder();
         return result;
@@ -157,12 +163,19 @@ public class SceneController {
 
         Result result = new Result(new Object(), new Info());
 
-        //校验轮播图，置顶的数量不能大于4
+        //校验轮播图，置顶的数量不能大于4。先计算已置顶的轮播图数量
         QueryWrapper<Slider> sliderQW = new QueryWrapper<>();
         sliderQW.eq("top",true);
         int count = sliderService.count(sliderQW);
 
-        if (count>=4 && stickyObject.getSliderTop()){
+        //再判断这一次操作，是否是置顶新轮播图的操作
+        QueryWrapper<Slider> qOriginal = new QueryWrapper<>();
+        qOriginal.eq("id",stickyObject.getSliderId());
+        Slider originalSlider = sliderService.getOne(qOriginal);
+
+        //也就是这次操作属于对楼层图置顶的操作，而且是原先没有置顶该楼层图，而这次要置顶。
+        //否则的话会干扰其他所有操作
+        if (!originalSlider.getTop() && stickyObject.getSliderTop() && count>=4){
             result.data=null;
             result.info.setCode(400);
             result.info.setMsg("轮播图置顶数量不能超过四个！");
@@ -173,10 +186,15 @@ public class SceneController {
         QueryWrapper<SceneImage> imageQW = new QueryWrapper<>();
         imageQW.eq("top",true).eq("type","postcard");
         int count1 = imageService.count(imageQW);
-        if (count1>=4 && stickyObject.getStickyTop()){
+
+        imageQW.clear();
+        imageQW.eq("id",stickyObject.getImgId());
+        SceneImage originalImg = imageService.getOne(imageQW);
+
+        if (count1>=4 && stickyObject.getStickyTop() && !originalImg.getTop()){
             result.data=null;
             result.info.setCode(400);
-            result.info.setMsg("轮播图置顶数量不能超过四个！");
+            result.info.setMsg("各个楼层图置顶数量不能超过四个！");
             return result;
         }
 

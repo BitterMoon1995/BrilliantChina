@@ -18,13 +18,13 @@ import java.util.List;
  */
 public interface IRouteService extends IService<Route> {
 
-    void add(Route route);
+    Integer add(Route route);
 
     void resetOrder();
 
     void setImgs(Route route, String id);
 
-    void edit(Route route);
+    Integer edit(Route route);
 
     void delDetails(String id);
 

@@ -39,21 +39,14 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     @Autowired
     ISliderService sliderService;
     @Override
-    public void add(Scene scene) {
-        boolean isBlank = StringUtils.isBlank(scene.getId());
-        if (isBlank){
-            boolean saved = save(scene);
-            String id = "";
-            if (saved) {
-                id = scene.getId();
-                saveDetails(scene, id);
-            }
+    public Integer add(Scene scene) {
+        boolean saved = save(scene);
+        String id = "";
+        if (saved) {
+            id = scene.getId();
+            saveDetails(scene, id);
         }
-        else {
-            updateById(scene);
-            saveDetails(scene, scene.getId());
-        }
-
+        return 666;
     }
 
     @Override
@@ -80,10 +73,27 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
     }
 
     @Override
-    public void edit(Scene scene) {
+    public Integer edit(Scene scene) {
+        Scene she = mapper.selectById(scene.getId());
+        //修改时景区名防重
+        String name = scene.getName();
+        QueryWrapper<Scene> wrapper = new QueryWrapper<>();
+        wrapper.eq("name",name);
+        Integer count = mapper.selectCount(wrapper);
+        if (!she.getName().equals(name) && count>=1) return 400;
+
+        //文本信息增量修改
+//        if (!StringUtils.isBlank(scene.getName())) she.setName(scene.getName());
+//        if (!StringUtils.isBlank(scene.getLocation())) she.setLocation(scene.getLocation());
+//        if (!StringUtils.isBlank(scene.getSlogan())) she.setSlogan(scene.getSlogan());
+//        if (!StringUtils.isBlank(scene.getLevel())) she.setLevel(scene.getLevel());
+//        if (scene.getPrice()!=0) she.setPrice(scene.getPrice());
+//
+//        updateById(she);
         mapper.updateById(scene);
 
         saveDetails(scene,scene.getId());
+        return 666;
     }
 
     void saveDetails(Scene scene, String id){

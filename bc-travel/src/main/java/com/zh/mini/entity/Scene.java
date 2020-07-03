@@ -42,6 +42,14 @@ public class Scene implements Serializable {
 
     private Date createTime;
 
+    //来吧，展示景区特有字段，心在跳爱在烧
+
+    private String  level;
+
+    private Integer price;
+
+    //图片区
+
     @TableField(exist = false)
     private List<SceneImage> introImgs;//详情页轮播图，6张
 

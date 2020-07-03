@@ -5,6 +5,7 @@ import com.zh.mini.bo.SearchResult;
 import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.Activity;
 import com.zh.mini.entity.ActivityImage;
+import com.zh.mini.entity.Activity;
 import com.zh.mini.entity.Slider;
 import com.zh.mini.mapper.ActivityMapper;
 import com.zh.mini.service.IActivityService;
@@ -38,21 +39,14 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     @Autowired
     ISliderService sliderService;
     @Override
-    public void add(Activity activity) {
-        boolean isBlank = StringUtils.isBlank(activity.getId());
-        if (isBlank){
-            boolean saved = save(activity);
-            String id = "";
-            if (saved) {
-                id = activity.getId();
-                saveDetails(activity, id);
-            }
+    public Integer add(Activity activity) {
+        boolean saved = save(activity);
+        String id = "";
+        if (saved) {
+            id = activity.getId();
+            saveDetails(activity, id);
         }
-        else {
-            updateById(activity);
-            saveDetails(activity, activity.getId());
-        }
-
+        return 666;
     }
 
     @Override
@@ -79,10 +73,27 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     }
 
     @Override
-    public void edit(Activity activity) {
+    public Integer edit(Activity activity) {
+        Activity she = mapper.selectById(activity.getId());
+        //修改时景区名防重
+        String name = activity.getName();
+        QueryWrapper<Activity> wrapper = new QueryWrapper<>();
+        wrapper.eq("name",name);
+        Integer count = mapper.selectCount(wrapper);
+        if (!she.getName().equals(name) && count>=1) return 400;
+
+        //文本信息增量修改
+//        if (!StringUtils.isBlank(activity.getName())) she.setName(activity.getName());
+//        if (!StringUtils.isBlank(activity.getLocation())) she.setLocation(activity.getLocation());
+//        if (!StringUtils.isBlank(activity.getSlogan())) she.setSlogan(activity.getSlogan());
+//        if (!StringUtils.isBlank(activity.getLevel())) she.setLevel(activity.getLevel());
+//        if (activity.getPrice()!=0) she.setPrice(activity.getPrice());
+//
+//        updateById(she);
         mapper.updateById(activity);
 
         saveDetails(activity,activity.getId());
+        return 666;
     }
 
     void saveDetails(Activity activity, String id){
