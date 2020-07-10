@@ -3,10 +3,13 @@ package com.zh.admin.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zh.admin.entity.Menu;
+import com.zh.admin.entity.User;
 import com.zh.admin.service.IMenuService;
+import com.zh.admin.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -26,12 +29,21 @@ import java.util.List;
 public class MenuController {
     @Autowired
     IMenuService service;
+    @Autowired
+    IUserService userService;
     @RequestMapping("/getAll")
-    public List<Menu> getAll(){
-        ArrayList<Menu> menus = new ArrayList<>();
+    public List<Menu> getAll(@RequestParam String username){
+        QueryWrapper<User> userQ = new QueryWrapper<>();
+        userQ.eq("username",username);
+        User user = userService.getOne(userQ);
+        //获取当前用户权限值
+        Integer role = user.getRole();
+
         QueryWrapper<Menu> wrapper1 = new QueryWrapper<>();
-        //找到所有一级菜单，加入list1
-        wrapper1.eq("sid",-1);
+        //找到所有权限和当前用户相匹配的一级菜单，加入list1。
+        //具体来说是权限值大于等于当前用户的权限，比如用户role为1，那么可以得到所有1.2.3的菜单；
+        //若为3，则只能得到3的菜单
+        wrapper1.eq("sid",-1).ge("role",role);
         List<Menu> list1 = service.list(wrapper1);
 
         for (Menu menu : list1) {

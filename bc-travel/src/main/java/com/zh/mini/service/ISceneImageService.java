@@ -2,6 +2,9 @@ package com.zh.mini.service;
 
 import com.zh.mini.entity.SceneImage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zh.mini.vo.StickyImgVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISceneImageService extends IService<SceneImage> {
 
+    List<StickyImgVo> getFloorList();
 }

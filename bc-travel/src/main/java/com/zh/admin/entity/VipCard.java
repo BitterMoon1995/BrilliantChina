@@ -82,4 +82,14 @@ public class VipCard implements Serializable {
         一天只能改一次，防止乱搞
      */
     private Date editTime;
+
+    /**
+     * 推广收益
+     */
+    private Integer profit;
+
+    /**
+     * 微信号还是要安排
+     */
+    private String wechatId;
 }

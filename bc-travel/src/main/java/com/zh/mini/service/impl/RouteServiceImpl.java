@@ -93,16 +93,7 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
         Integer count = mapper.selectCount(wrapper);
         if (!she.getName().equals(name) && count>=1) return 400;
 
-        //文本信息增量修改
-//        if (!StringUtils.isBlank(route.getName())) she.setName(route.getName());
-//        if (!StringUtils.isBlank(route.getLocation())) she.setLocation(route.getLocation());
-//        if (!StringUtils.isBlank(route.getSlogan())) she.setSlogan(route.getSlogan());
-//        if (!StringUtils.isBlank(route.getLevel())) she.setLevel(route.getLevel());
-//        if (route.getPrice()!=0) she.setPrice(route.getPrice());
-//
-//        updateById(she);
         mapper.updateById(route);
-
         saveDetails(route,route.getId());
         return 666;
     }

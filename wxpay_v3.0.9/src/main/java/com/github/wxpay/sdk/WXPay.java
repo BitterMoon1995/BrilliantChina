@@ -16,6 +16,7 @@ public class WXPay {
 
     public WXPay(final WXPayConfig config) throws Exception {
         this(config, null, true, false);
+        //★★★要使用MD5必须修改源码！！！★★★
         this.signType=SignType.MD5;
     }
 

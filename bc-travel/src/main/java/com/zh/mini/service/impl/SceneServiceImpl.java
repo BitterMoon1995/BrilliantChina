@@ -82,16 +82,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
         Integer count = mapper.selectCount(wrapper);
         if (!she.getName().equals(name) && count>=1) return 400;
 
-        //文本信息增量修改
-//        if (!StringUtils.isBlank(scene.getName())) she.setName(scene.getName());
-//        if (!StringUtils.isBlank(scene.getLocation())) she.setLocation(scene.getLocation());
-//        if (!StringUtils.isBlank(scene.getSlogan())) she.setSlogan(scene.getSlogan());
-//        if (!StringUtils.isBlank(scene.getLevel())) she.setLevel(scene.getLevel());
-//        if (scene.getPrice()!=0) she.setPrice(scene.getPrice());
-//
-//        updateById(she);
         mapper.updateById(scene);
-
         saveDetails(scene,scene.getId());
         return 666;
     }

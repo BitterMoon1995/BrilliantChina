@@ -4,7 +4,11 @@ import com.zh.mini.entity.SceneImage;
 import com.zh.mini.mapper.SceneImageMapper;
 import com.zh.mini.service.ISceneImageService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zh.mini.vo.StickyImgVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +21,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SceneImageServiceImpl extends ServiceImpl<SceneImageMapper, SceneImage> implements ISceneImageService {
 
+    @Autowired
+    SceneImageMapper mapper;
+
+    @Override
+    public List<StickyImgVo> getFloorList() {
+        return mapper.getFloorList();
+    }
 }

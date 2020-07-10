@@ -34,9 +34,9 @@ public interface SceneMapper extends BaseMapper<Scene> {
     @Select("SELECT * FROM mini_scene WHERE LOCATE( #{name} ,name) > 0")
     List<Scene> allSearch(String name);
 
-    //景区置顶 联合分页查询
+    //后台 景区置顶 联合分页查询
 //    StickyObject这个业务类要管理该景区的所有置顶信息，所以联合查询的部分字段要取别名
-    @Select("SELECT s.name,\n" +
+    @Select("SELECT s.name name, s.slogan slogan\n" +
             "i.id imgId,i.top stickyTop,i.order_num stickyOrder,i.url,\n" +
             "sl.id sliderId,sl.top sliderTop,sl.order_num sliderOrder\n" +
             "FROM mini_scene AS s \n" +
@@ -49,7 +49,7 @@ public interface SceneMapper extends BaseMapper<Scene> {
             "LIMIT #{index},#{offset}")
     List<StickyObject> getSticky(Integer index, Integer offset);
 
-    //景区置顶 搜索 联合分页条件查询
+    //后台 景区置顶 搜索 联合分页条件查询
     @Select("SELECT s.name,\n" +
             "i.id imgId,i.top stickyTop,i.order_num stickyOrder,i.url,\n" +
             "sl.id sliderId,sl.top sliderTop,sl.order_num sliderOrder\n" +
@@ -83,7 +83,7 @@ public interface SceneMapper extends BaseMapper<Scene> {
      */
 
     //更多 页，列表展示
-    @Select("SELECT s.name name,s.slogan slogan,i.url url,i.src src " +
+    @Select("SELECT s.name name,s.slogan slogan,s.price price,s.level level,i.url url,i.src src " +
             "FROM mini_scene s\n" +
             "LEFT JOIN mini_scene_image i\n" +
             "ON s.id=i.scene_id\n" +

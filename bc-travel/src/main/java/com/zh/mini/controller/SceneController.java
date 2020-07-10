@@ -4,6 +4,8 @@ package com.zh.mini.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zh.admin.entity.User;
+import com.zh.admin.service.IUserService;
 import com.zh.mini.bo.SearchResult;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.Scene;
@@ -38,6 +40,8 @@ import java.util.List;
 public class SceneController {
     @Autowired
     ISceneService service;
+    @Autowired
+    IUserService userService;
     //周神之：归来
 
     @GetMapping("/getByUsername")
@@ -45,17 +49,19 @@ public class SceneController {
             , @RequestParam String condition , @RequestParam String username){
         SceneVo sceneVo = new SceneVo();
         Page<Scene> page = new Page<>(pageNum,pageSize);
+        //获取用户
+        User user = getUser(username);
         //非搜索
         if (condition.isEmpty()) {
-            //非管理员根据username查
-            if (!username.equals("admin") && !username.equals("manager")) {
+            //客户只能查自己的项目
+            if (user.getRole() == 3) {
                 QueryWrapper<Scene> wrapper = new QueryWrapper<>();
                 wrapper.eq("username", username);
                 List<Scene> list = service.page(page,wrapper).getRecords();
                 sceneVo.setSceneList(list);
                 //一定要返回真正的总数量
                 sceneVo.setTotal(service.count(wrapper));
-            //管理员，返回所有
+            //管理员或维尼，返回所有
             } else {
                 List<Scene> list = service.page(page).getRecords();
                 sceneVo.setSceneList(list);
@@ -231,5 +237,12 @@ public class SceneController {
     @GetMapping("/showList")
     public List<SearchResult> showList(){
         return service.showList();
+    }
+
+    //根据用户名返回用户
+    public User getUser(String username){
+        QueryWrapper<User> userQ = new QueryWrapper<>();
+        userQ.eq("username",username);
+        return userService.getOne(userQ);
     }
 }

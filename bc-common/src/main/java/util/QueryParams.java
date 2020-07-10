@@ -2,10 +2,11 @@ package util;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class QueryParams {
     Integer pageNum;
     Integer pageSize;
-    String condition;
-    String username;
+    List<String> conditions;
 }

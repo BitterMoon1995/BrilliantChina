@@ -23,7 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         String serverAuth = stringOption.get(account);
         assert serverAuth != null;
         //根据 用户名-token 键值对的匹配来对所以请求（除登陆）做安全判断，不匹配返false。、
-        //暂时做到这个程度。不匹配重定向到登陆页面没搞出来
+        //暂时做到这个程度。不匹配重定向到登陆页面没搞出来(重定向过不了CORS)
         return serverAuth.equals(auth);
     }
 

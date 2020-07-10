@@ -4,6 +4,8 @@ package com.zh.mini.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zh.admin.entity.User;
+import com.zh.admin.service.IUserService;
 import com.zh.mini.bo.SearchResult;
 import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.*;
@@ -37,15 +39,19 @@ import java.util.List;
 public class ActivityController {
     @Autowired
     IActivityService service;
+    @Autowired
+    IUserService userService;
     @GetMapping("/getByUsername")
     public ActivityVo getByUsername(@RequestParam Integer pageNum, @RequestParam Integer pageSize
             , @RequestParam String condition , @RequestParam String username){
         ActivityVo activityVo = new ActivityVo();
         Page<Activity> page = new Page<>(pageNum,pageSize);
+        //获取用户
+        User user = getUser(username);
         //非搜索
         if (condition.isEmpty()) {
             //非管理员根据username查
-            if (!username.equals("admin") && !username.equals("manager")) {
+            if (user.getRole() == 3) {
                 QueryWrapper<Activity> wrapper = new QueryWrapper<>();
                 wrapper.eq("username", username);
                 List<Activity> list = service.page(page,wrapper).getRecords();
@@ -222,5 +228,12 @@ public class ActivityController {
     @GetMapping("/search")
     public List<SearchResult> search(@RequestParam String condition){
         return service.search(condition);
+    }
+
+    //根据用户名返回用户
+    public User getUser(String username){
+        QueryWrapper<User> userQ = new QueryWrapper<>();
+        userQ.eq("username",username);
+        return userService.getOne(userQ);
     }
 }

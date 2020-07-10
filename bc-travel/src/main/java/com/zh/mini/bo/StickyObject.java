@@ -8,6 +8,7 @@ import java.util.Date;
 public class StickyObject {
     String name;
     String url;
+    String slogan;
     Date createTime;
 
     Boolean stickyTop;

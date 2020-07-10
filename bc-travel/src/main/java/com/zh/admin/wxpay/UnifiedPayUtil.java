@@ -35,8 +35,8 @@ public class UnifiedPayUtil {
         params.put("openid",openid);
         params.put("sign_type","MD5");//【这里设置是无效的，麻了】
 
+        // 【★★★要在源码中修改对应的构造方法，使 this.signType=SignType.MD5;真麻了★★★】
         WXPay wxPay = new WXPay(new WXPayConfigImpl());//
-        // 【要在源码中修改对应的构造方法，使 this.signType=SignType.MD5;真麻了】
         // 【事实上签名方式要三统一，统一下单=签名生成=小程序调起】
         Map<String, String> resultMap = wxPay.unifiedOrder(params);
 

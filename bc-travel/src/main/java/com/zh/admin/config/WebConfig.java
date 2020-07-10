@@ -48,8 +48,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/add","/del","/change")
+                //增、删、字段修改、后台菜单列表
+                .addPathPatterns("/add","/del","/change","/menu/getAll")
                 //有坑
-                .excludePathPatterns("/**/user/login**");
+                .excludePathPatterns("/login");
     }
 }

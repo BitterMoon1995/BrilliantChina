@@ -82,16 +82,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
         Integer count = mapper.selectCount(wrapper);
         if (!she.getName().equals(name) && count>=1) return 400;
 
-        //文本信息增量修改
-//        if (!StringUtils.isBlank(activity.getName())) she.setName(activity.getName());
-//        if (!StringUtils.isBlank(activity.getLocation())) she.setLocation(activity.getLocation());
-//        if (!StringUtils.isBlank(activity.getSlogan())) she.setSlogan(activity.getSlogan());
-//        if (!StringUtils.isBlank(activity.getLevel())) she.setLevel(activity.getLevel());
-//        if (activity.getPrice()!=0) she.setPrice(activity.getPrice());
-//
-//        updateById(she);
         mapper.updateById(activity);
-
         saveDetails(activity,activity.getId());
         return 666;
     }

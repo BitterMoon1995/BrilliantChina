@@ -36,6 +36,8 @@ public class Menu implements Serializable {
 
     private Integer ordernum;
 
+    private Integer role;
+
     @TableField(exist = false)
     private List<Menu> children;
 }

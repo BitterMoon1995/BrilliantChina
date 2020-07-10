@@ -18,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,10 +93,22 @@ public class GodzTest {
 //
 //        BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
 
-        //充值成功，续一年
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.set(Calendar.YEAR,calendar.get(Calendar.YEAR)+1);
-        System.out.println(calendar.getTime());
+//        //充值成功，续一年
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(new Date());
+//        calendar.set(Calendar.YEAR,calendar.get(Calendar.YEAR)+1);
+//        System.out.println(calendar.getTime());
+
+        //比天数差
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = format.parse("2020-07-04");
+        long expDateTime = date.getTime();
+        System.out.println(expDateTime);
+
+        long currentDateTime = new Date().getTime();
+        System.out.println(currentDateTime);
+
+        System.out.println(Math.toIntExact((expDateTime - currentDateTime) / 86400000));
     }
 }

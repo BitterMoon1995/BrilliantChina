@@ -8,9 +8,12 @@ import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfigImpl;
 import com.mysql.cj.protocol.x.Notice;
 import com.zh.admin.entity.VipCard;
+import com.zh.admin.entity.Withdraw;
 import com.zh.admin.service.IVipCardService;
+import com.zh.admin.service.IWithdrawService;
 import com.zh.admin.utils.GodzSUtils;
 import com.zh.admin.utils.HttpsUtils;
+import com.zh.admin.vo.ProfitVo;
 import com.zh.admin.wxpay.Openid;
 import com.zh.admin.wxpay.PayVo;
 import com.zh.admin.wxpay.UnifiedPayUtil;
@@ -23,10 +26,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,8 +44,11 @@ public class VipCardController {
     @Autowired
     IVipCardService service;
     @Autowired
+    IWithdrawService withdrawService;
+    @Autowired
     RedisTemplate<String,String> redisTemplate;
 
+    //获取openID
     @GetMapping("/login")
     public Object login(@RequestParam String code) throws Exception {
         RestTemplate template = new RestTemplate();
@@ -61,7 +65,7 @@ public class VipCardController {
         return zxtsima;
     }
 
-    //新会员注册
+    //新用户注册
     @PostMapping("/save")
     public boolean saveVipInfo(@RequestBody VipCard vipCard){
         //生成推荐码
@@ -103,42 +107,61 @@ public class VipCardController {
         if (!address.isEmpty()) vipCard.setAddress(address);
         if (!photoSrc.isEmpty()) vipCard.setPhotoSrc(photoSrc);
         vipCard.setEditTime(new Date());
+
         boolean b = service.updateById(vipCard);
         if (b) return 200;  //完结撒花  ✿✿ヽ(°▽°)ノ✿
         else return 500; //服务器错误
     }
 
+    //异步校验推荐码
     @PostMapping("/verifyPmCode")
     public Integer verifyPmCode(@RequestParam String openid,@RequestParam String pmCode){
-        if (openid.isEmpty() || pmCode.isEmpty()) return 415;
+        if (openid.isEmpty() || pmCode.isEmpty()) return 403;
         VipCard i = getByOpenid(openid);
         VipCard she = getByPmCode(pmCode);
+        //此推荐码无匹配会员
         if (i == null || she == null) return 400;
-        if (she.getOpenid().equals(openid)) return 403;
+        //不能推荐自己
+        if (she.getOpenid().equals(openid)) return 415;
+        //推荐人没充值
+        Integer remainingDays = service.getRemainingDays(she.getExpirationTime());
+        if (remainingDays < 0) return 416;
         return 200;
     }
 
+    //支付
     @PostMapping("/pay")
     public PayVo pay(@RequestBody Openid openid, HttpServletRequest request) throws Exception {
         String theShy = openid.getOpenid();
+        //统一下单
         PayVo vo = UnifiedPayUtil.unifiedPay(theShy);
+        //Redis设置 openID-此次下单随机串 键值对
+        //会员时长充值安全性设计：
+        // 1.外部调用charge方法充值会员时长时，必须携带统一下单生成的字符串
+        // 2.charge方法调用成功后，Redis中该键值对即刻销毁，永远保证给一次钱<=>充一次值
         String nonceStr = vo.getNonceStr();
         ValueOperations<String, String> op = redisTemplate.opsForValue();
         op.set(openid.getOpenid(),nonceStr,60, TimeUnit.SECONDS);
         return vo;
     }
 
+    //支付回调
     @PostMapping("/charge")
-    public void charge(@RequestParam String openid,@RequestParam String nonceStr){
+    public void charge(@RequestParam String openid,
+                       @RequestParam String nonceStr,
+                       @RequestParam(required = false) String promoCode){
+
+        if (nonceStr == null) return;
         ValueOperations<String, String> op = redisTemplate.opsForValue();
         String myStr = op.get(openid);
-        assert myStr != null;
+        if (myStr == null) return;
+        //校验通过，合法充值
         if (myStr.equals(nonceStr)){
             QueryWrapper<VipCard> wrapper = new QueryWrapper<>();
             wrapper.eq("openid",openid);
-            VipCard vipCard = service.getOne(wrapper);
+            VipCard me = service.getOne(wrapper);
 
-            Date date = vipCard.getExpirationTime();
+            Date date = me.getExpirationTime();
             Calendar expTime = Calendar.getInstance();
             expTime.setTime(date);
 
@@ -147,16 +170,71 @@ public class VipCardController {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date());
                 calendar.set(Calendar.YEAR,calendar.get(Calendar.YEAR)+1);
-                vipCard.setExpirationTime(calendar.getTime());
+                me.setExpirationTime(calendar.getTime());
+
+                if (!promoCode.isEmpty()){
+                    //获取上级
+                    wrapper.clear();
+                    wrapper.eq("promo_code",promoCode);
+                    VipCard upOneLevel = service.getOne(wrapper);
+                    //上级没充值？摘了
+                    Integer days = service.getRemainingDays(upOneLevel.getExpirationTime());
+                    if (days < 0) return;
+
+                    //设置上级ID
+                    me.setSuperiorId(upOneLevel.getId());
+
+                    //上级收米
+                    Integer profit = upOneLevel.getProfit();
+                    if (profit == null) upOneLevel.setProfit(20);
+                    else upOneLevel.setProfit(profit + 20);
+                    service.updateById(upOneLevel);
+
+                    //尝试获取上上级
+                    String upTwoLevelId = upOneLevel.getSuperiorId();
+                    if (!upTwoLevelId.isEmpty()){
+                        wrapper.clear();
+                        wrapper.eq("id", upTwoLevelId);
+                        VipCard upTwoLevel = service.getOne(wrapper);
+                        //上上级收米
+                        Integer profit2 = upTwoLevel.getProfit();
+                        if (profit2 == null) upTwoLevel.setProfit(2);
+                        else upTwoLevel.setProfit(profit2 + 2);
+                        service.updateById(upTwoLevel);
+                    }
+
+                }
             }
             //充过，原有到期时间续一年
             else {
                 expTime.set(Calendar.YEAR,expTime.get(Calendar.YEAR)+1);
-                vipCard.setExpirationTime(expTime.getTime());
+                me.setExpirationTime(expTime.getTime());
             }
+            //安全性设计，见L-128
             redisTemplate.delete(openid);
-            service.updateById(vipCard);
+
+            service.updateById(me);
         }
+    }
+
+    //提现
+    @GetMapping("/withdraw")
+    public Integer withdraw(@RequestParam String wechatId,@RequestParam String openid){
+        VipCard vipCard = getByOpenid(openid);
+        vipCard.setWechatId(wechatId);
+
+        Withdraw withdraw = new Withdraw();
+        withdraw.setAmount(vipCard.getProfit());
+        withdraw.setCreateTime(LocalDateTime.now());
+        withdraw.setWechatId(wechatId);
+        withdraw.setState("未处理");
+
+        if (withdrawService.save(withdraw)){
+            vipCard.setProfit(0);
+            service.updateById(vipCard);
+            return 200;
+        }
+        return 500;
     }
 
     @GetMapping("/getVipInfo")

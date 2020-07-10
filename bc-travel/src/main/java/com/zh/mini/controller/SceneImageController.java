@@ -8,6 +8,7 @@ import com.zh.mini.entity.SceneImage;
 import com.zh.mini.entity.Slider;
 import com.zh.mini.service.ICategoryService;
 import com.zh.mini.service.ISceneImageService;
+import com.zh.mini.vo.StickyImgVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,16 +34,9 @@ public class SceneImageController {
     ISceneImageService service;
 
     //周神之铃鹿御前
-    @RequestMapping("/getSticky")
-    public List<SceneImage> getSticky() {
-        QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
-        wrapper.eq("type", "postcard")
-                //只取置顶的，排好序
-                .eq("top",true)
-                .orderByAsc("order_num")
-                //.last 拼接末尾的SQL语句，这里用limit限制取出的数量，只取4个
-                .last("limit 0,4");
-        return service.list(wrapper);
+    @RequestMapping("/getFloorList")
+    public List<StickyImgVo> getFloorList() {
+        return service.getFloorList();
     }
 
     @RequestMapping("/getIntros")
