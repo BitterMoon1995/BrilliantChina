@@ -7,6 +7,10 @@ import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import netscape.javascript.JSObject;
+import org.gavaghan.geodesy.Ellipsoid;
+import org.gavaghan.geodesy.GeodeticCalculator;
+import org.gavaghan.geodesy.GeodeticCurve;
+import org.gavaghan.geodesy.GlobalCoordinates;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -101,14 +105,32 @@ public class GodzTest {
 
         //比天数差
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = format.parse("2020-07-04");
-        long expDateTime = date.getTime();
-        System.out.println(expDateTime);
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        Date date = format.parse("2020-07-04");
+//        long expDateTime = date.getTime();
+//        System.out.println(expDateTime);
+//
+//        long currentDateTime = new Date().getTime();
+//        System.out.println(currentDateTime);
+//
+//        System.out.println(Math.toIntExact((expDateTime - currentDateTime) / 86400000));
 
-        long currentDateTime = new Date().getTime();
-        System.out.println(currentDateTime);
+        //根据经纬度计算距离
+        GlobalCoordinates source = new GlobalCoordinates(39.908821, 116.397469);//咱老北京儿天安门儿
+        GlobalCoordinates target = new GlobalCoordinates(31.40527, 121.48941);//天龙外滩
 
-        System.out.println(Math.toIntExact((expDateTime - currentDateTime) / 86400000));
+        double meter1 = getDistanceMeter(source, target, Ellipsoid.Sphere);
+        double meter2 = getDistanceMeter(source, target, Ellipsoid.WGS84);//祖国の坐标系
+
+        System.out.println("Sphere坐标系计算结果："+meter1 + "米");
+        System.out.println("WGS84坐标系计算结果："+meter2 + "米");//注意是嗯球面距离，公路距离这些不考虑
+
+    }
+    public static double getDistanceMeter(GlobalCoordinates gpsFrom, GlobalCoordinates gpsTo, Ellipsoid ellipsoid)
+    {
+        //创建GeodeticCalculator，调用计算方法，传入坐标系、经纬度用于计算距离
+        GeodeticCurve geoCurve = new GeodeticCalculator().calculateGeodeticCurve(ellipsoid, gpsFrom, gpsTo);
+
+        return geoCurve.getEllipsoidalDistance();
     }
 }

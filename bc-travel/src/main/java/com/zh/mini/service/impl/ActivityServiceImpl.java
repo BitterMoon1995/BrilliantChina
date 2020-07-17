@@ -3,10 +3,8 @@ package com.zh.mini.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zh.mini.bo.SearchResult;
 import com.zh.mini.bo.StickyObject;
+import com.zh.mini.entity.*;
 import com.zh.mini.entity.Activity;
-import com.zh.mini.entity.ActivityImage;
-import com.zh.mini.entity.Activity;
-import com.zh.mini.entity.Slider;
 import com.zh.mini.mapper.ActivityMapper;
 import com.zh.mini.service.IActivityService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -110,16 +108,24 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
         if (postcard!=null) {
             QueryWrapper<ActivityImage> wrapper = new QueryWrapper<>();
             wrapper.eq("type","postcard").eq("activity_id",id);
-            imageService.remove(wrapper);
+            ActivityImage preOne = imageService.getOne(wrapper);
             postcard.setActivityId(id);
+            postcard.setTop(preOne.getTop());
+            postcard.setUrl(preOne.getUrl());
+            postcard.setOrderNum(preOne.getOrderNum());
+            imageService.remove(wrapper);
             imageService.save(postcard);
         }
 
         if (slider!=null) {
             QueryWrapper<Slider> wrapper = new QueryWrapper<>();
             wrapper.eq("target_id",id);
-            sliderService.remove(wrapper);
+            Slider preOne = sliderService.getOne(wrapper);
             slider.setTargetId(id);
+            slider.setTop(preOne.getTop());
+            slider.setOrderNum(preOne.getOrderNum());
+            slider.setUrl(preOne.getUrl());
+            sliderService.remove(wrapper);
             sliderService.save(slider);
         }
 

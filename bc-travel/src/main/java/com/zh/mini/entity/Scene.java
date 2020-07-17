@@ -44,9 +44,13 @@ public class Scene implements Serializable {
 
     //来吧，展示景区特有字段，心在跳爱在烧
 
-    private String  level;
+    private String  level;//星级
 
     private Integer price;
+
+    private Double longitude;//经度  经纬度将用于详情页路线规划导航
+
+    private Double latitude;//纬度
 
     //图片区
 

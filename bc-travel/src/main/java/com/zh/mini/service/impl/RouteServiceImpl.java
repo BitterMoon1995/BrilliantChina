@@ -120,17 +120,25 @@ public class RouteServiceImpl extends ServiceImpl<RouteMapper, Route> implements
 
         if (postcard!=null) {
             QueryWrapper<RouteImage> wrapper = new QueryWrapper<>();
-            wrapper.eq("type","postcard").eq("route_id",id);
-            imageService.remove(wrapper);
+            wrapper.eq("type","postcard").eq("scene_id",id);
+            RouteImage preOne = imageService.getOne(wrapper);
             postcard.setRouteId(id);
+            postcard.setTop(preOne.getTop());
+            postcard.setUrl(preOne.getUrl());
+            postcard.setOrderNum(preOne.getOrderNum());
+            imageService.remove(wrapper);
             imageService.save(postcard);
         }
 
         if (slider!=null) {
             QueryWrapper<Slider> wrapper = new QueryWrapper<>();
             wrapper.eq("target_id",id);
-            sliderService.remove(wrapper);
+            Slider preOne = sliderService.getOne(wrapper);
             slider.setTargetId(id);
+            slider.setTop(preOne.getTop());
+            slider.setOrderNum(preOne.getOrderNum());
+            slider.setUrl(preOne.getUrl());
+            sliderService.remove(wrapper);
             sliderService.save(slider);
         }
 

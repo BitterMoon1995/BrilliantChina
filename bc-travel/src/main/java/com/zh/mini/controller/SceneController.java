@@ -15,6 +15,7 @@ import com.zh.mini.service.ISceneImageService;
 import com.zh.mini.service.ISceneService;
 import com.zh.mini.service.ISliderService;
 import com.zh.mini.bo.StickyObject;
+import com.zh.mini.vo.DetailPage;
 import com.zh.mini.vo.StickyObjectVo;
 import com.zh.mini.vo.SceneVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -238,6 +239,25 @@ public class SceneController {
     public List<SearchResult> showList(){
         return service.showList();
     }
+
+    //传输详情页VO。意义：减少WEB层请求次数，降低服务器带宽压力
+    @GetMapping("/getById")
+    public DetailPage getById(String Id){
+        Scene scene = service.getById(Id);
+
+        QueryWrapper<SceneImage> query = new QueryWrapper<>();
+        query.eq("scene_id",Id).eq("type","intros").orderByAsc("order_num");
+        List<SceneImage> intros = imageService.list(query);
+
+        query.clear();
+        query.eq("scene_id",Id).eq("type","richText");
+        SceneImage richText = imageService.getOne(query);
+
+        //不太优雅
+        return new DetailPage(intros,scene.getName(),scene.getLocation(),
+                scene.getPrice(),scene.getLongitude(),scene.getLatitude(),richText);
+    }
+
 
     //根据用户名返回用户
     public User getUser(String username){

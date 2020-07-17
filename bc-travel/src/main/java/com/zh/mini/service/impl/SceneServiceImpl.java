@@ -93,6 +93,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
         Slider slider = scene.getSlider();
         SceneImage richText = scene.getRichText();
 
+        //增量修改，有则改之，无则麻了
         if (introImgs!=null) {
             QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
             wrapper.eq("type","intros").eq("scene_id",id);
@@ -107,19 +108,45 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
             }
         }
 
+        //修改了项目的轮播图或名片，要把原图片的置顶、顺序、URL这些信息同步到新图片上
+        //如果原图片没有这些信息或者根本就没有原图片，跳过
         if (postcard!=null) {
             QueryWrapper<SceneImage> wrapper = new QueryWrapper<>();
             wrapper.eq("type","postcard").eq("scene_id",id);
-            imageService.remove(wrapper);
+            SceneImage preOne = imageService.getOne(wrapper);
             postcard.setSceneId(id);
+
+            //没有原图片
+            if (preOne!=null) {
+                //原图片无该信息   这就是爪哇的判空吗？i了
+                if (preOne.getTop() != null)
+                    postcard.setTop(preOne.getTop());
+                if (preOne.getUrl() != null)
+                    postcard.setUrl(preOne.getUrl());
+                if (preOne.getOrderNum() != null)
+                    postcard.setOrderNum(preOne.getOrderNum());
+            }
+
+            imageService.remove(wrapper);
             imageService.save(postcard);
         }
 
         if (slider!=null) {
             QueryWrapper<Slider> wrapper = new QueryWrapper<>();
             wrapper.eq("target_id",id);
-            sliderService.remove(wrapper);
+            Slider preOne = sliderService.getOne(wrapper);
             slider.setTargetId(id);
+
+            if (preOne!=null) {
+                if (preOne.getTop() != null)
+                    slider.setTop(preOne.getTop());
+                if (preOne.getUrl() != null)
+                    slider.setUrl(preOne.getUrl());
+                if (preOne.getOrderNum() != null)
+                    slider.setOrderNum(preOne.getOrderNum());
+            }
+
+            sliderService.remove(wrapper);
             sliderService.save(slider);
         }
 

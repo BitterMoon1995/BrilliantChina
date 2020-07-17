@@ -1,5 +1,6 @@
 package com.zh.admin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zh.admin.entity.VipCard;
 import com.zh.admin.mapper.VipCardMapper;
 import com.zh.admin.service.IVipCardService;
@@ -26,5 +27,12 @@ public class VipCardServiceImpl extends ServiceImpl<VipCardMapper, VipCard> impl
         long currentDateTime = new Date().getTime();
 
         return Math.toIntExact((expDateTime - currentDateTime) / 86400000);
+    }
+
+    @Override
+    public VipCard getByOpenid(String openid) {
+        QueryWrapper<VipCard> wrapper = new QueryWrapper<>();
+        wrapper.eq("openid",openid);
+        return getOne(wrapper);
     }
 }
