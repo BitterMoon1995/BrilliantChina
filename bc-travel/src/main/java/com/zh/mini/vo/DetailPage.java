@@ -16,6 +16,7 @@ public class DetailPage {
 
     String name;
     String location;
+    String level;
     Integer price;
     Double longitude;//经度
     Double latitude;//纬度

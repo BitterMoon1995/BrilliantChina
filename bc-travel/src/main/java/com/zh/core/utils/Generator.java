@@ -1,4 +1,4 @@
-package com.zh.admin.utils;
+package com.zh.core.utils;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;

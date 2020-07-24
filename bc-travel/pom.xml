@@ -27,6 +27,11 @@
             <artifactId>wxpay-sdk</artifactId>
             <version>3.0.9</version>
         </dependency>
+        <!--引入AOP依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

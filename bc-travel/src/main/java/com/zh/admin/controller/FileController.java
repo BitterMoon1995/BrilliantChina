@@ -1,6 +1,7 @@
 package com.zh.admin.controller;
 
-import com.zh.admin.utils.FileUploadUtil;
+import com.zh.core.aop.LimitFrequency;
+import com.zh.core.utils.FileUploadUtil;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import java.util.List;
 @CrossOrigin
 
 public class FileController {
+    @LimitFrequency
     @RequestMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file){
         return FileUploadUtil.uploadFile(file);

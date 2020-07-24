@@ -1,4 +1,4 @@
-package com.zh.admin.config;
+package com.zh.core.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

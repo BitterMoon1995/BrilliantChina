@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zh.admin.entity.Search;
 import com.zh.admin.service.ISearchService;
 import com.zh.admin.service.IVipCardService;
+import com.zh.core.aop.LimitFrequency;
 import com.zh.mini.bo.SearchResult;
 import com.zh.mini.service.IActivityService;
 import com.zh.mini.service.IRouteService;
@@ -35,6 +36,7 @@ public class SearchController {
 
     //godzSearch之全文检索
     @RequestMapping("/overall")
+    @LimitFrequency
     public List<SearchResult> overall(@RequestParam String openid,@RequestParam String condition){
         //记录用户的最近6次搜索，在小程序搜索页展示
         QueryWrapper<Search> query = new QueryWrapper<>();

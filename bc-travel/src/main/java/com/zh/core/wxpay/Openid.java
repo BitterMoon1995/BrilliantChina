@@ -1,4 +1,4 @@
-package com.zh.admin.wxpay;
+package com.zh.core.wxpay;
 
 import lombok.Data;
 

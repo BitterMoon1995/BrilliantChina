@@ -1,4 +1,4 @@
-package com.zh.admin.config;
+package com.zh.core.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;

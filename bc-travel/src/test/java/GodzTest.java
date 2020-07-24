@@ -1,12 +1,5 @@
-import com.alibaba.fastjson.JSONObject;
-import com.github.wxpay.sdk.WXPay;
-import com.mysql.cj.protocol.x.Notice;
 import com.zh.RunMini;
-import com.zh.admin.utils.HttpsUtils;
-import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
-import netscape.javascript.JSObject;
+import com.zh.admin.entity.User;
 import org.gavaghan.geodesy.Ellipsoid;
 import org.gavaghan.geodesy.GeodeticCalculator;
 import org.gavaghan.geodesy.GeodeticCurve;
@@ -14,20 +7,12 @@ import org.gavaghan.geodesy.GlobalCoordinates;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @SpringBootTest(classes = RunMini.class)
@@ -40,7 +25,13 @@ public class GodzTest {
     @Test
     public void test1(){
         ValueOperations<String, String> op = stringTemplate.opsForValue();
-        op.append("blackNigger","黑奴大尼哥儿");
+//        op.set("blackNigger","1");
+//        op.append("blackNigger","1");
+        String blackNigger = op.get("blackNigger");
+        System.out.println(blackNigger);
+        assert blackNigger != null;
+        int i = Integer.parseInt(blackNigger);
+        System.out.println(i+1);
     }
 
     public static void main(String[] args) throws Exception {
@@ -116,14 +107,17 @@ public class GodzTest {
 //        System.out.println(Math.toIntExact((expDateTime - currentDateTime) / 86400000));
 
         //根据经纬度计算距离
-        GlobalCoordinates source = new GlobalCoordinates(39.908821, 116.397469);//咱老北京儿天安门儿
-        GlobalCoordinates target = new GlobalCoordinates(31.40527, 121.48941);//天龙外滩
+//        GlobalCoordinates source = new GlobalCoordinates(39.908821, 116.397469);//咱老北京儿天安门儿
+//        GlobalCoordinates target = new GlobalCoordinates(31.40527, 121.48941);//天龙外滩
+//
+//        double meter1 = getDistanceMeter(source, target, Ellipsoid.Sphere);
+//        double meter2 = getDistanceMeter(source, target, Ellipsoid.WGS84);//祖国の坐标系
+//
+//        System.out.println("Sphere坐标系计算结果："+meter1 + "米");
+//        System.out.println("WGS84坐标系计算结果："+meter2 + "米");//注意是嗯球面距离，公路距离这些不考虑
 
-        double meter1 = getDistanceMeter(source, target, Ellipsoid.Sphere);
-        double meter2 = getDistanceMeter(source, target, Ellipsoid.WGS84);//祖国の坐标系
-
-        System.out.println("Sphere坐标系计算结果："+meter1 + "米");
-        System.out.println("WGS84坐标系计算结果："+meter2 + "米");//注意是嗯球面距离，公路距离这些不考虑
+        Calendar calendar = Calendar.getInstance();
+        System.out.println(calendar.get(Calendar.MONTH)+1);
 
     }
     public static double getDistanceMeter(GlobalCoordinates gpsFrom, GlobalCoordinates gpsTo, Ellipsoid ellipsoid)

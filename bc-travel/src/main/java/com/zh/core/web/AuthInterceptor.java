@@ -1,4 +1,4 @@
-package com.zh.admin.web;
+package com.zh.core.web;
 
 import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;

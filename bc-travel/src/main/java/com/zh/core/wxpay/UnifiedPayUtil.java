@@ -1,13 +1,11 @@
-package com.zh.admin.wxpay;
+package com.zh.core.wxpay;
 
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfigImpl;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.zh.admin.utils.GodzSUtils;
+import com.zh.core.utils.GodzSUtils;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -92,4 +92,9 @@ public class VipCard implements Serializable {
      * 微信号还是要安排
      */
     private String wechatId;
+
+    /*
+        充过 吗
+     */
+    private Boolean charged;
 }

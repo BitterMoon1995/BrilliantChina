@@ -254,7 +254,7 @@ public class SceneController {
         SceneImage richText = imageService.getOne(query);
 
         //不太优雅
-        return new DetailPage(intros,scene.getName(),scene.getLocation(),
+        return new DetailPage(intros,scene.getName(),scene.getLocation(),scene.getLevel(),
                 scene.getPrice(),scene.getLongitude(),scene.getLatitude(),richText);
     }
 

@@ -1,4 +1,4 @@
-package com.zh.admin.utils;
+package com.zh.core.utils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -18,7 +18,13 @@ import java.util.Map;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * Http请求
@@ -400,6 +406,23 @@ public class HttpsUtils {
         }
 
 
+    }
+
+    //来源：权限项目，HttpUtils
+    public static HttpServletRequest getRequest() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes();
+        return requestAttributes.getRequest();
+    }
+
+    public static HttpServletResponse getResponse() {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes();
+        return requestAttributes.getResponse();
+    }
+
+    public static HttpSession getSession() {
+        return getRequest().getSession();
     }
 
     //====================================================================

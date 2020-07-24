@@ -3,21 +3,15 @@ package com.zh.admin.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.github.wxpay.sdk.WXPay;
-import com.github.wxpay.sdk.WXPayConfigImpl;
-import com.mysql.cj.protocol.x.Notice;
 import com.zh.admin.entity.VipCard;
 import com.zh.admin.entity.Withdraw;
 import com.zh.admin.service.IVipCardService;
 import com.zh.admin.service.IWithdrawService;
-import com.zh.admin.utils.GodzSUtils;
-import com.zh.admin.utils.HttpsUtils;
-import com.zh.admin.vo.ProfitVo;
-import com.zh.admin.wxpay.Openid;
-import com.zh.admin.wxpay.PayVo;
-import com.zh.admin.wxpay.UnifiedPayUtil;
-import lombok.Data;
+import com.zh.core.utils.GodzSUtils;
+import com.zh.core.utils.HttpsUtils;
+import com.zh.core.wxpay.Openid;
+import com.zh.core.wxpay.PayVo;
+import com.zh.core.wxpay.UnifiedPayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -171,6 +165,8 @@ public class VipCardController {
                 calendar.setTime(new Date());
                 calendar.set(Calendar.YEAR,calendar.get(Calendar.YEAR)+1);
                 me.setExpirationTime(calendar.getTime());
+                //设置为已充值过のBOY
+                me.setCharged(true);
 
                 if (!promoCode.isEmpty()){
                     //获取上级
@@ -205,8 +201,16 @@ public class VipCardController {
 
                 }
             }
-            //充过，原有到期时间续一年
+            //还要判断是否已过期
+            //没过期直接续一年，已过期当前时间充一年啊！！！！！！！！！！！！！！！！！！！！！！！！
             else {
+                Date now = new Date();
+                long now_mil = now.getTime();
+                long exp_mil = expTime.getTime().getTime();
+                //如果是过期了的，怎么可能在过期时间上续？肯定当前时间啊
+                if (exp_mil < now_mil) {
+                    expTime.setTime(now);
+                }
                 expTime.set(Calendar.YEAR,expTime.get(Calendar.YEAR)+1);
                 me.setExpirationTime(expTime.getTime());
             }

@@ -1,4 +1,4 @@
-package com.zh.admin.config;
+package com.zh.core.config;
 
 import com.github.wxpay.sdk.IWXPayDomain;
 import com.github.wxpay.sdk.WXPayConfig;

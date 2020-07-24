@@ -1,4 +1,4 @@
-package com.zh.admin.utils;
+package com.zh.core.utils;
 
 import org.csource.common.MyException;
 import org.csource.fastdfs.*;
