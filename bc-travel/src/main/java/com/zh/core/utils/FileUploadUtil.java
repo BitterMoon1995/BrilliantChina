@@ -1,9 +1,9 @@
 package com.zh.core.utils;
 
+import com.zh.common.ConstantTable;
 import org.csource.common.MyException;
 import org.csource.fastdfs.*;
 import org.springframework.web.multipart.MultipartFile;
-import util.ConstantTable;
 
 import java.io.IOException;
 

@@ -22,16 +22,26 @@
             <version>1.0-SNAPSHOT</version>
             <groupId>com.zhuohang</groupId>
         </dependency>
-        <dependency>
-            <groupId>com.github.wxpay</groupId>
-            <artifactId>wxpay-sdk</artifactId>
-            <version>3.0.9</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.wxpay</groupId>-->
+<!--            <artifactId>wxpay-sdk</artifactId>-->
+<!--            <version>3.0.9</version>-->
+<!--        </dependency>-->
         <!--引入AOP依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.samba.jcifs/jcifs -->
+        <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+
+
+
     </dependencies>
 
 </project>

@@ -1,6 +1,7 @@
 package com.zh.mini.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.zh.mini.bo.SearchResult;
 import com.zh.mini.bo.StickyObject;
 import com.zh.mini.entity.*;
@@ -140,13 +141,13 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     }
 
     public void delDetails(String id){
-        QueryWrapper<ActivityImage> activityImageWrapper = new QueryWrapper<>();
-        activityImageWrapper.eq("activity_id",id);
-        imageService.remove(activityImageWrapper);
+        UpdateWrapper<ActivityImage> update = new UpdateWrapper<>();
+        update.eq("activity_id",id).set("is_delete",true);
+        imageService.update(update);
 
-        QueryWrapper<Slider> sliderWrapper = new QueryWrapper<>();
-        sliderWrapper.eq("target_id",id);
-        sliderService.remove(sliderWrapper);
+        UpdateWrapper<Slider> sliderU = new UpdateWrapper<>();
+        sliderU.eq("target_id",id).set("is_delete",true);
+        sliderService.update(sliderU);
     }
 
     @Override

@@ -45,6 +45,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
+        /*
+
+         - /**： 匹配所有路径
+         - /admin/**：匹配 /admin/ 下的所有路径
+         - /secure/*：只匹配 /secure/user，不匹配 /secure/user/info
+
+         */
+
         registry.addInterceptor(authInterceptor)
                 //增、删、字段修改、后台菜单列表
                 .addPathPatterns("/add","/del","/change","/menu/getAll")

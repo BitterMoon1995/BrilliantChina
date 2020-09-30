@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zh.admin.entity.User;
 import com.zh.admin.service.IUserService;
 import com.zh.admin.vo.UserVo;
+import com.zh.common.Info;
+import com.zh.common.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
-import util.Info;
-import util.Result;
 
 import java.util.Collections;
 import java.util.List;

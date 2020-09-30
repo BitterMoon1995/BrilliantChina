@@ -40,4 +40,6 @@ public class ActivityImage implements Serializable {
     private Integer orderNum;
 
     private Boolean top;
+
+    private Boolean isDelete;
 }

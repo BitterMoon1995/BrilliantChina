@@ -38,4 +38,6 @@ public class Slider implements Serializable {
     private Integer orderNum;//首页管理确定
     //是否置顶
     private Boolean top;//首页管理确定
+
+    private Boolean isDelete;
 }

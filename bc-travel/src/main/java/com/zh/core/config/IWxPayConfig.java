@@ -1,8 +1,6 @@
 package com.zh.core.config;
 
-import com.github.wxpay.sdk.IWXPayDomain;
-import com.github.wxpay.sdk.WXPayConfig;
-import com.github.wxpay.sdk.WXPayConstants;
+
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.ByteArrayInputStream;

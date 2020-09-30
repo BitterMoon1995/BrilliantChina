@@ -1,4 +1,4 @@
-package util;
+package com.zh.common;
 
 import lombok.Data;
 

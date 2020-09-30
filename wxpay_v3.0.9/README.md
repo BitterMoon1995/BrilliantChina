@@ -82,8 +82,8 @@ public class MyConfig implements WXPayConfig{
 ```java
 import com.github.wxpay.sdk.WXPay;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.com.zh.common.util.HashMap;
+import java.com.zh.common.util.Map;
 
 public class WXPayExample {
 
@@ -118,8 +118,8 @@ public class WXPayExample {
 ```java
 import com.github.wxpay.sdk.WXPay;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.com.zh.common.util.HashMap;
+import java.com.zh.common.util.Map;
 
 public class WXPayExample {
 
@@ -147,8 +147,8 @@ public class WXPayExample {
 ```java
 import com.github.wxpay.sdk.WXPay;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.com.zh.common.util.HashMap;
+import java.com.zh.common.util.Map;
 
 public class WXPayExample {
 
@@ -176,8 +176,8 @@ public class WXPayExample {
 ```java
 import com.github.wxpay.sdk.WXPay;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.com.zh.common.util.HashMap;
+import java.com.zh.common.util.Map;
 
 public class WXPayExample {
 
@@ -208,8 +208,8 @@ public class WXPayExample {
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.com.zh.common.util.HashMap;
+import java.com.zh.common.util.Map;
 
 public class WXPayExample {
 
@@ -240,7 +240,7 @@ public class WXPayExample {
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 
-import java.util.Map;
+import java.com.zh.common.util.Map;
 
 public class WXPayExample {
 

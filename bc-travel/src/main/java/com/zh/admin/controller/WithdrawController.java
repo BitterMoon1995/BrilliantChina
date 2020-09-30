@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zh.admin.entity.Withdraw;
 import com.zh.admin.service.IWithdrawService;
 import com.zh.admin.vo.WithdrawVo;
+import com.zh.common.QueryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
-import util.QueryParams;
 
 import java.util.List;
 

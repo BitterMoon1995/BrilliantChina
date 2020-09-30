@@ -6,8 +6,9 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zh.admin.entity.User;
 import com.zh.admin.service.IUserService;
+import com.zh.common.Info;
+import com.zh.common.Result;
 import com.zh.mini.bo.SearchResult;
-import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.Scene;
 import com.zh.mini.entity.SceneImage;
 import com.zh.mini.entity.Slider;
@@ -20,10 +21,8 @@ import com.zh.mini.vo.StickyObjectVo;
 import com.zh.mini.vo.SceneVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import util.Info;
-import util.Result;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 

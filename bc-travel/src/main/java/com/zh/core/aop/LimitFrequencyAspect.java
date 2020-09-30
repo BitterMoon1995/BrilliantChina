@@ -98,7 +98,7 @@ public class LimitFrequencyAspect {
             count++;
             /*
             小Api:   void set(K var1, V var2, long var3)  表示覆盖从指定位置开始的值,
-            var3方法表示偏移量。通过该方法并将var3设置为0可以修改值而不影响键的过期时间
+            var3方法表示偏移量。将var3设置为0可以修改值而不影响键的过期时间
              */
             redis.set(key,String.valueOf(count),0);
             //如果限制时间内，N超过限制次数limit

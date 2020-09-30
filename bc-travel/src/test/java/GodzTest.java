@@ -22,17 +22,17 @@ public class GodzTest {
     @Autowired
     RedisTemplate redisTemplate;
 
-    @Test
-    public void test1(){
-        ValueOperations<String, String> op = stringTemplate.opsForValue();
-//        op.set("blackNigger","1");
-//        op.append("blackNigger","1");
-        String blackNigger = op.get("blackNigger");
-        System.out.println(blackNigger);
-        assert blackNigger != null;
-        int i = Integer.parseInt(blackNigger);
-        System.out.println(i+1);
-    }
+//    @Test
+//    public void test1(){
+//        ValueOperations<String, String> op = stringTemplate.opsForValue();
+////        op.set("blackNigger","1");
+////        op.append("blackNigger","1");
+//        String blackNigger = op.get("blackNigger");
+//        System.out.println(blackNigger);
+//        assert blackNigger != null;
+//        int i = Integer.parseInt(blackNigger);
+//        System.out.println(i+1);
+//    }
 
     public static void main(String[] args) throws Exception {
         //随机数

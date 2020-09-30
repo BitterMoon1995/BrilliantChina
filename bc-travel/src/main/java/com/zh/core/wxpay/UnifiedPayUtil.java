@@ -1,15 +1,11 @@
 package com.zh.core.wxpay;
 
-import com.github.wxpay.sdk.WXPay;
-import com.github.wxpay.sdk.WXPayConfigImpl;
-import com.github.wxpay.sdk.WXPayConstants;
-import com.github.wxpay.sdk.WXPayUtil;
+
 import com.zh.core.utils.GodzSUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.wxpay.sdk.WXPayConstants.MD5;
 
 public class UnifiedPayUtil {
 
@@ -57,7 +53,7 @@ public class UnifiedPayUtil {
         map.put("timeStamp",timeStamp);
         map.put("nonceStr",nonce_str);
         map.put("package","prepay_id="+packageZ);
-        map.put("signType", MD5);
+        map.put("signType", WXPayConstants.MD5);
         return WXPayUtil.generateSignature(map, "Q1ew9re8ret7i8pgj2mn1b23bg5f7ik5", WXPayConstants.SignType.MD5);
     }
 }

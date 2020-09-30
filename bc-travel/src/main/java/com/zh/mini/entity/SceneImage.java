@@ -44,4 +44,6 @@ public class SceneImage implements Serializable {
 
     private Boolean top;//首页管理确定
 
+    private Boolean isDelete;
+
 }
