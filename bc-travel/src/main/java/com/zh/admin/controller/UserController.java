@@ -8,6 +8,7 @@ import com.zh.admin.service.IUserService;
 import com.zh.admin.vo.UserVo;
 import com.zh.common.Info;
 import com.zh.common.Result;
+import com.zh.common.iResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -24,7 +25,6 @@ import java.util.concurrent.TimeUnit;
  *  前端控制器
  * </p>
  *
- * @author 暮星公主周薇儿
  * @since 2020-05-02
  */
 @RestController
@@ -156,5 +156,13 @@ public class UserController {
         Collections.sort(userList);
         vo.setUserList(userList);
         vo.setTotal(service.count(wrapper));
+    }
+
+    @DeleteMapping("/logout")
+    public iResult logout(@RequestParam String username){
+        boolean delete = template.delete(username);
+        if (delete)
+            return iResult.success;
+        else return iResult.serverDown;
     }
 }

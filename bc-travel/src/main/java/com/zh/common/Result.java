@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Result {
+    //分页的类设计......GG
+//    public Integer total;
     public Object data;
     public Info info;
 }

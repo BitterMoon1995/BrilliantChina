@@ -3,7 +3,9 @@ package com.zh.admin.controller;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+import com.zh.common.iResult;
 import com.zh.core.aop.LimitFrequency;
+import com.zh.core.constant.Host01;
 import com.zh.core.utils.FileUploadUtil;
 import com.zh.core.utils.LinuxUtils;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,11 @@ public class FileController {
     @LimitFrequency
     @RequestMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file) {
-        return FileUploadUtil.uploadFile(file);
+        String res = FileUploadUtil.uploadFile(file);
+        if (res.equals("tracker_down")||res.equals("storage_down")){
+            return "FileServiceDown";
+        }
+        return res;
     }
 
     @RequestMapping("/multiFile")
@@ -41,24 +47,12 @@ public class FileController {
         LinuxUtils linuxUtil = LinuxUtils.getInstance2();
 
         try {
-            linuxUtil.linuxUtilsLogin("132.232.95.249",
-                    "root", "Z:t6]RPg_f$k`5x92/a?1=p0Z+}6O");
+            linuxUtil.linuxUtilsLogin(Host01.ipAddress,
+                    "root", Host01.password);
             linuxUtil.deleteFile(path);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        String s = "http://192.168.156.128//group1/M00/00/00/hOhf-V9ysNOASTKJAAY-dvHy3wY938.jpg";
-        String pre = "/data/fastdfs/data/data";
-        String path = pre + s.substring(32);
-
-//        String[] strings = s.split("//");
-//        System.out.println(strings[0]);
-//        System.out.println(strings[1]);
-//        System.out.println(strings[2].substring(10));
-        System.out.println(s.split("//")[2].substring(10));
     }
 }

@@ -15,6 +15,7 @@ import com.zh.core.wxpay.UnifiedPayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -139,7 +140,8 @@ public class VipCardController {
         return vo;
     }
 
-    //支付回调
+    //★★★支付回调
+    @Transactional
     @PostMapping("/charge")
     public void charge(@RequestParam String openid,
                        @RequestParam String nonceStr,
@@ -155,7 +157,7 @@ public class VipCardController {
             wrapper.eq("openid",openid);
             VipCard me = service.getOne(wrapper);
 
-            Date date = me.getExpirationTime();
+            Date date = me         .getExpirationTime();
             Calendar expTime = Calendar.getInstance();
             expTime.setTime(date);
 

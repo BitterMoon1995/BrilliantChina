@@ -3,6 +3,7 @@ package com.zh.core.schedule;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import com.zh.core.constant.Host01;
 import com.zh.core.utils.LinuxUtils;
 import com.zh.mini.entity.SceneImage;
 import com.zh.mini.entity.Slider;
@@ -47,11 +48,11 @@ public class FileManage {
 
     public void delImgs(List<SceneImage> sceneImages,List<Slider> sliderList){
         LinuxUtils jschUtils = LinuxUtils.getInstance2();
-        String pre = "/data/fastdfs/data/data";
+        String pre = Host01.storagePath;
         //获取会话、建立连接
         try {
-            jschUtils.linuxUtilsLogin("132.232.95.249",
-                    "root", "Z:t6]RPg_f$k`5x92/a?1=p0Z+}6O");
+            jschUtils.linuxUtilsLogin(Host01.ipAddress,
+                    "root", Host01.password);
         } catch (Exception e) {
             e.printStackTrace();
             return;

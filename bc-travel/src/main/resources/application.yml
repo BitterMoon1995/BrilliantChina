@@ -5,22 +5,31 @@ server:
   address: 0.0.0.0
 spring:
   # 配置数据源
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://132.232.95.249:3306/zmchina?serverTimezone=GMT%2B8&useTimezone=true&useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: root
-    password: 8uQ*i56-w2o/P9b3a+
-    type: com.mchange.v2.c3p0.ComboPooledDataSource
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://132.232.95.249:3306/zmchina?serverTimezone=GMT%2B8&useTimezone=true&useUnicode=true&characterEncoding=utf-8&useSSL=false
+#    username: root
+#    password: 8uQ*i56-w2o/P9b3a+
+#    type: com.mchange.v2.c3p0.ComboPooledDataSource
+
   # spring2.0+的一个文件上传限制
   servlet:
     multipart:
-      max-file-size: 12MB
-      max-request-size: 12MB
+      max-file-size: 16MB
+      max-request-size: 16MB
 
   redis:
     host: 132.232.95.249
     #不是服务器密码，是Redis密码
     password: godz1995
+    #池的配置在项目部署阶段就要老命了
+    #SB（好像）用的是lettuce不是jedis,区别：当多线程使用同一连接实例时，lettuce是线程安全的，反观
+    jedis:
+      pool:
+        min-idle: 10
+        max-idle: 30
+        max-active: 30
+        max-wait: 50000
 
 # mybatis-plus相关配置
 mybatis-plus:
@@ -42,3 +51,26 @@ mybatis-plus:
     call-setters-on-nulls: true
     # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# logback配置
+logging:
+  level:
+    root: info
+
+c3p0:
+  #key和spring默认的配置项不一样，千万小心
+  user: root
+  password: 8uQ*i56-w2o/P9b3a+
+  jdbcUrl: jdbc:mysql://132.232.95.249:3306/zmchina?serverTimezone=GMT%2B8&useTimezone=true&useUnicode=true&characterEncoding=utf-8&useSSL=false
+  driverClass: com.mysql.cj.jdbc.Driver
+
+  minPoolSize: 5
+  maxPoolSize: 100
+  #初始化连接数
+  initialPoolSize: 6
+  #最大空闲时间（都是秒）
+  maxIdleTime: 1800
+  #★每X秒检查所有连接池中的空闲连接
+  idleConnectionTestPeriod: 120
+  #帮助线程数
+  numHelperThreads: 3

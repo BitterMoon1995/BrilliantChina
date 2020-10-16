@@ -37,7 +37,7 @@ public class Generator {
         // 在指定的子模块下生成。会有WINDOWS弹窗报错，不用管
         String projectPath = System.getProperty("user.dir")+"/bc-travel";
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("God周周神");
+        gc.setAuthor("周总书记");
         gc.setOpen(true);
         //所有表的主键类型为String，分配UUID
         gc.setIdType(IdType.ASSIGN_UUID);

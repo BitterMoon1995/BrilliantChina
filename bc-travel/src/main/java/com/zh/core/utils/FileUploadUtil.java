@@ -1,6 +1,7 @@
 package com.zh.core.utils;
 
 import com.zh.common.ConstantTable;
+import com.zh.core.constant.Host01;
 import org.csource.common.MyException;
 import org.csource.fastdfs.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,10 @@ public class FileUploadUtil {
             trackerServer = trackerClient.getConnection();
         } catch (IOException e) {
             e.printStackTrace();
+            /*
+            连不上tracker，立即返回
+            */
+            return "tracker_down";
         }
 
         StorageServer storageServer = null;
@@ -28,6 +33,10 @@ public class FileUploadUtil {
             storageServer = trackerClient.getStoreStorage(trackerServer);
         } catch (IOException e) {
             e.printStackTrace();
+            /*
+            tracker连不上storage，立即返回
+             */
+            return "storage_down";
         }
 
         StorageClient storageClient = new StorageClient(trackerServer, storageServer);
@@ -42,7 +51,7 @@ public class FileUploadUtil {
             e.printStackTrace();
         }
 
-        StringBuilder url= new StringBuilder(ConstantTable.fileUpLoadUrl);
+        StringBuilder url= new StringBuilder(Host01.httpUrl);
         for (String s : uploadInfo) {
             url.append("/").append(s);
         }

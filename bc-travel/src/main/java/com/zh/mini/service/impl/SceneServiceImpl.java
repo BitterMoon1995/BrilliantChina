@@ -15,6 +15,7 @@ import com.zh.mini.service.ISliderService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Collator;
 import java.util.Collections;
@@ -87,7 +88,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
         saveDetails(scene,scene.getId());
         return 666;
     }
-
+    @Transactional
     void saveDetails(Scene scene, String id){
         List<SceneImage> introImgs = scene.getIntroImgs();
         SceneImage postcard = scene.getPostcard();
@@ -161,6 +162,10 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
 
     }
 
+    /*
+    ★本项目对附属图片的删除逻辑是先把数据库字段is_delete置为true
+    然后通过定时任务调用JSCH api从服务器硬盘删
+    */
     public void delDetails(String id){
         UpdateWrapper<SceneImage> update = new UpdateWrapper<>();
         update.eq("scene_id",id).set("is_delete",true);
