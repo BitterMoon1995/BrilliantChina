@@ -118,7 +118,7 @@ public class SceneServiceImpl extends ServiceImpl<SceneMapper, Scene> implements
             SceneImage preOne = imageService.getOne(wrapper);
             postcard.setSceneId(id);
 
-            //没有原图片
+            //有原图片
             if (preOne!=null) {
                 //原图片无该信息   这就是爪哇的判空吗？i了
                 if (preOne.getTop() != null)

@@ -26,9 +26,13 @@ public class FileManage {
     @Autowired
     SliderMapper sliderMapper;
 
-    @Scheduled(fixedRate = 1000 * 60 * 60)//1小时
+    @Scheduled(cron = "0 0 4 * * ?")//每天凌晨4点
     public void imageClean(){
         
+
+        /*
+        *   加个线程池
+        * */
 
         //查所有要删除的图片
         QueryWrapper<SceneImage> sceneImgQ = new QueryWrapper<>();
@@ -48,7 +52,6 @@ public class FileManage {
 
     public void delImgs(List<SceneImage> sceneImages,List<Slider> sliderList){
         LinuxUtils jschUtils = LinuxUtils.getInstance2();
-        String pre = Host01.storagePath;
         //获取会话、建立连接
         try {
             jschUtils.linuxUtilsLogin(Host01.ipAddress,
@@ -60,9 +63,8 @@ public class FileManage {
         for (SceneImage sceneImage : sceneImages) {
             String url = sceneImage.getSrc();
             System.out.println(url);
-            System.out.println(pre+url.split("//")[2].substring(10));
             try {
-                jschUtils.deleteFile(pre+url.split("//")[2].substring(10));
+                jschUtils.deleteFile(url.split("//")[2].substring(10));
             } catch (SftpException | JSchException e) {
                 e.printStackTrace();
                 return;
@@ -71,7 +73,7 @@ public class FileManage {
         for (Slider slider : sliderList) {
             String url = slider.getSrc();
             try {
-                jschUtils.deleteFile(pre+url.split("//")[2].substring(10));
+                jschUtils.deleteFile(url.split("//")[2].substring(10));
             } catch (SftpException | JSchException e) {
                 e.printStackTrace();
                 return;

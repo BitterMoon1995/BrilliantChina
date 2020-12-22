@@ -17,4 +17,6 @@ public interface IVipCardService extends IService<VipCard> {
     Integer getRemainingDays(Date expDate);
 
     VipCard getByOpenid(String openid);
+
+    short checkVipStatus(String openid);
 }

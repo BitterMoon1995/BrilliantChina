@@ -15,6 +15,8 @@ public class iResult {
     public static iResult success = new iResult(Status.success());
     public static iResult serverDown = new iResult(Status.serverDown());
     public static iResult illegalParam = new iResult(Status.illegalParam());
+    public static iResult hostileAttack = new iResult(Status.hostileAttack());
+
     /*演示懒汉式，注意要考虑线程安全：
     1.volatile实例保证内存可见性、有序性（不保证原子性）
     2.实例化时，要双校验

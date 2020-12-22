@@ -47,7 +47,7 @@ public class LinuxUtils {
         return linuxUtils;
     }
 
-    private static final int DEFAULT_PORT = 22;        // 默认端口号
+    private static final int DEFAULT_PORT = 8964;        // 改端口了
 
     private static String ipAddress = Host01.ipAddress;        // ip地址
     private static String userName = "root";        // 账号
@@ -97,9 +97,7 @@ public class LinuxUtils {
      *
      * @throws Exception
      */
-    public boolean linuxUtilsLogin(String ipAddress, String userName, String password) throws Exception {
-        if (session!=null)
-            System.out.println(session.isConnected());
+    public boolean linuxUtilsLogin(String ipAddress, String userName, String password) throws Exception { ;
         // 没有会话或会话无连接，标志位回置
         if (session == null || !session.isConnected())
             logined = false;
@@ -260,27 +258,18 @@ public class LinuxUtils {
 
     /**
      * 删除文件
-     * <p>
-     * directory
-     * 要删除文件所在目录
-     * deleteFile
-     * 要删除的文件
-     * sftp
-     *
-     * @throws SftpException
-     * @throws JSchException
+     * 接收参数为文件的坐标
      */
     public void deleteFile(String directoryFile) throws SftpException, JSchException {
         // 打开openChannel的sftp
         ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
         // 远程连接
         channelSftp.connect();
-        // 删除文件
-        System.out.println(directoryFile);
-        channelSftp.rm(directoryFile);
+        // 删除文件，统一拼接fastdfs文件仓库路径前缀
+        channelSftp.rm(Host01.storagePath+directoryFile);
         // 切断远程连接
         channelSftp.exit();
-        System.out.println("4、" + directoryFile + " 删除的文件.....");
+        System.out.println(directoryFile + " 删除的文件.....");
     }
 
     /**

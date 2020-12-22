@@ -20,6 +20,7 @@ import com.zh.mini.vo.DetailPage;
 import com.zh.mini.vo.StickyObjectVo;
 import com.zh.mini.vo.SceneVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,6 +43,8 @@ public class SceneController {
     ISceneService service;
     @Autowired
     IUserService userService;
+    @Autowired
+    ISceneImageService imageService;
     //周神之：归来
 
     @GetMapping("/getByUsername")
@@ -88,6 +91,7 @@ public class SceneController {
         service.resetOrder();
     }
 
+    @Transactional
     @PostMapping("/add")
     public Result add(@RequestBody Scene scene){
         Result result = new Result(new Object(),new Info());
@@ -141,94 +145,6 @@ public class SceneController {
         return service.removeById(id);
     }
 
-    @GetMapping("/getSticky")
-    public StickyObjectVo getSticky(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
-                                  @RequestParam String condition){
-        StickyObjectVo sceneStickyVo = new StickyObjectVo();
-        List<StickyObject> stickyList;
-
-        if (condition.isEmpty()) {
-            stickyList = service.getSticky((pageNum - 1) * pageSize, pageSize);
-        }
-        else {
-            stickyList = service.search((pageNum - 1) * pageSize, pageSize,condition);
-        }
-        int total = service.count();
-        sceneStickyVo.setStickyList(stickyList);
-        sceneStickyVo.setTotal(total);
-        return sceneStickyVo;
-    }
-
-    @Autowired
-    ISceneImageService imageService;
-    @Autowired
-    ISliderService sliderService;
-
-    @PostMapping("/change")
-    public Result change(@RequestBody StickyObject stickyObject){
-
-        Result result = new Result(new Object(), new Info());
-
-        //校验轮播图，置顶的数量不能大于4。先计算已置顶的轮播图数量
-        QueryWrapper<Slider> sliderQW = new QueryWrapper<>();
-        sliderQW.eq("top",true);
-        int count = sliderService.count(sliderQW);
-
-        //再判断这一次操作，是否是置顶新轮播图的操作
-        QueryWrapper<Slider> qOriginal = new QueryWrapper<>();
-        qOriginal.eq("id",stickyObject.getSliderId());
-        Slider originalSlider = sliderService.getOne(qOriginal);
-
-        //也就是这次操作属于对楼层图置顶的操作，而且是原先没有置顶该楼层图，而这次要置顶。
-        //否则的话会干扰其他所有操作
-        if (!originalSlider.getTop() && stickyObject.getSliderTop() && count>=4){
-            result.data=null;
-            result.info.setCode(400);
-            result.info.setMsg("轮播图置顶数量不能超过四个！");
-            return result;
-        }
-
-        //校验楼层图，置顶的数量不能大于4
-        QueryWrapper<SceneImage> imageQW = new QueryWrapper<>();
-        imageQW.eq("top",true).eq("type","postcard");
-        int count1 = imageService.count(imageQW);
-
-        imageQW.clear();
-        imageQW.eq("id",stickyObject.getImgId());
-        SceneImage originalImg = imageService.getOne(imageQW);
-
-        if (count1>=4 && stickyObject.getStickyTop() && !originalImg.getTop()){
-            result.data=null;
-            result.info.setCode(400);
-            result.info.setMsg("各个楼层图置顶数量不能超过四个！");
-            return result;
-        }
-
-        //更新名片
-        UpdateWrapper<SceneImage> sceneUW= new UpdateWrapper<>();
-        sceneUW.eq("id", stickyObject.getImgId());
-
-        SceneImage sceneImage = imageService.getById(stickyObject.getImgId());
-        sceneImage.setTop(stickyObject.getStickyTop());
-        sceneImage.setOrderNum(stickyObject.getStickyOrder());
-        sceneImage.setUrl(stickyObject.getUrl());
-        imageService.update(sceneImage,sceneUW);
-
-        //更新首页轮播图
-        UpdateWrapper<Slider> sliderUW = new UpdateWrapper<>();
-        sliderUW.eq("id",stickyObject.getSliderId());
-
-        Slider slider = sliderService.getById(stickyObject.getSliderId());
-        slider.setTop(stickyObject.getSliderTop());
-        slider.setOrderNum(stickyObject.getSliderOrder());
-        slider.setUrl(stickyObject.getUrl());
-        sliderService.update(slider,sliderUW);
-
-        result.data=null;
-        result.info.setCode(200);
-        return result;
-    }
-
     @GetMapping("/search")
     public List<SearchResult> search(@RequestParam String condition){
         return service.search(condition);
@@ -256,7 +172,6 @@ public class SceneController {
         return new DetailPage(intros,scene.getName(),scene.getLocation(),scene.getLevel(),
                 scene.getPrice(),scene.getLongitude(),scene.getLatitude(),richText);
     }
-
 
     //根据用户名返回用户
     public User getUser(String username){

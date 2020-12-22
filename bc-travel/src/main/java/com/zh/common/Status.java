@@ -16,10 +16,11 @@ public class Status {
     private String msg;
     private int code;
 
-    private static int success = 200;
-    private static int invalidAuth = 403;
-    private static int illegalParam = 400;
-    private static int serverDown = 520;
+    public static int success = 200;
+    public static int invalidAuth = 403;
+    public static int illegalParam = 400;
+    public static int hostileAttack = 426;
+    public static int serverDown = 520;
 
     public static Status success(){
         return new Status("请求成功",success);
@@ -33,7 +34,15 @@ public class Status {
         return new Status("非法参数",illegalParam);
     }
 
+    public static Status hostileAttack(){
+        return new Status("死你妈",hostileAttack);
+    }
+
     public static Status serverDown(){
         return new Status("服务器开小差啦w(ﾟДﾟ)w",serverDown);//
+    }
+
+    public Status(String msg) {
+        this.msg = msg;
     }
 }

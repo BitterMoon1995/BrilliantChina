@@ -5,8 +5,11 @@ import com.zh.admin.entity.VipCard;
 import com.zh.admin.mapper.VipCardMapper;
 import com.zh.admin.service.IVipCardService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zh.common.VipStatus;
+import com.zh.core.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -35,4 +38,15 @@ public class VipCardServiceImpl extends ServiceImpl<VipCardMapper, VipCard> impl
         wrapper.eq("openid",openid);
         return getOne(wrapper);
     }
+
+    @Override
+    public short checkVipStatus(String openid) {
+        VipCard vip = getByOpenid(openid);
+        if (vip==null)
+        return VipStatus.notRegister;
+
+        Date expirationTime = vip.getExpirationTime();
+        return DateUtils.checkExpire(expirationTime);
+    }
+
 }

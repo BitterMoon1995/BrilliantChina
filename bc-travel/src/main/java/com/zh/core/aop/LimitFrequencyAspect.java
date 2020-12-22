@@ -58,12 +58,9 @@ public class LimitFrequencyAspect {
 
         //初始化限制条件
         LimitFrequency anno = target.getAnnotation(LimitFrequency.class);
-        int time;int limit;int block;
-        if (anno==null) {
-            time = 5;limit = 30;block = 300;
-        }
-        assert anno != null;
-        time = anno.time();limit = anno.limit();block = anno.block();
+        int time= anno.time();
+        int limit= anno.limit();
+        int block= anno.block();
 
         //生成Redis要存的のKey
         HttpServletRequest request = HttpsUtils.getRequest();

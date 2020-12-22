@@ -40,16 +40,13 @@ public class FileController {
     }
 
     @DeleteMapping("/delFile")
-    public void delFile(String url) {//接收仓库坐标+文件名
-        String pre = "/data/fastdfs/data/data";
-        String path = pre + url;//拼接前缀
-        System.out.println(path);
+    public void delFile(String url) {//url=接收仓库坐标+文件名,如/00/02/5W8Y014.jpg
         LinuxUtils linuxUtil = LinuxUtils.getInstance2();
 
         try {
             linuxUtil.linuxUtilsLogin(Host01.ipAddress,
                     "root", Host01.password);
-            linuxUtil.deleteFile(path);
+            linuxUtil.deleteFile(url);
         }
         catch (Exception e) {
             e.printStackTrace();

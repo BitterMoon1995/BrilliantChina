@@ -56,9 +56,7 @@ public class MiniImgController {
         List<MiniImg> imgList = service.page(page).getRecords();
 
         int total = service.count();
-        iResult iResult = new iResult(Status.success(), imgList, total);
-        System.out.println(iResult);
-        return iResult;
+        return new iResult(Status.success(), imgList, total);
     }
 
     @DeleteMapping("/del")
@@ -67,7 +65,7 @@ public class MiniImgController {
         MiniImg img = service.getById(id);
         try {
             String src0 = img.getSrc();
-            String src = Host01.storagePath + src0.split("//")[2].substring(10);
+            String src = src0.split("//")[2].substring(10);
             LinuxUtils.getInstance().deleteFile(src);
         } catch (SftpException | JSchException e) {
             return iResult.serverDown;

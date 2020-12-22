@@ -2,6 +2,8 @@ package com.zh.admin.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.Date;
@@ -97,4 +99,9 @@ public class VipCard implements Serializable {
         充过 吗
      */
     private Boolean charged;
+
+    /**
+       我不好说我擦
+     */
+    private short vipStatus;
 }

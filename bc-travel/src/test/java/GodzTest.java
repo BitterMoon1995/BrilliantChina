@@ -1,5 +1,8 @@
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.zh.RunMini;
+import com.zh.admin.entity.MiniImg;
 import com.zh.admin.entity.User;
+import com.zh.admin.service.IMiniImgService;
 import org.gavaghan.geodesy.Ellipsoid;
 import org.gavaghan.geodesy.GeodeticCalculator;
 import org.gavaghan.geodesy.GeodeticCurve;
@@ -17,6 +20,10 @@ import java.util.Calendar;
 
 @SpringBootTest(classes = RunMini.class)
 public class GodzTest {
+    @Autowired
+    IMiniImgService miniImgService;
+
+
     @Autowired
     StringRedisTemplate stringTemplate;
     @Autowired
