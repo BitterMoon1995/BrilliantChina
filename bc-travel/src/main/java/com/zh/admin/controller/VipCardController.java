@@ -12,6 +12,7 @@ import com.zh.common.iResult;
 import com.zh.core.utils.DateUtils;
 import com.zh.core.utils.GodzSUtils;
 import com.zh.core.utils.HttpsUtils;
+import com.zh.core.utils.TimeUtils;
 import com.zh.core.wxpay.Openid;
 import com.zh.core.wxpay.PayVo;
 import com.zh.core.wxpay.UnifiedPayUtil;
@@ -172,21 +173,21 @@ public class VipCardController {
         VipCard me = service.getOne(wrapper);
 
         Date date = me.getExpirationTime();
-        Calendar expTime = Calendar.getInstance();
-        expTime.setTime(date);
+        LocalDateTime usersExpTime = TimeUtils.asLocalDateTime(date);
 
         //没充过，当前时间续一年
-        if (expTime.get(Calendar.YEAR)==1989){
+        if (usersExpTime.getYear() == 1989){
             /*  这段get-set-set-set操作，非原子    */
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(new Date());
 
             /*  且calendar本身就是线程不安全    */
-
-            calendar.set(Calendar.YEAR,calendar.get(Calendar.YEAR)+1);
-            me.setExpirationTime(calendar.getTime());
-
             /*  必出事，必死    */
+
+//            calendar.set(Calendar.YEAR,calendar.get(Calendar.YEAR)+1);
+            LocalDateTime chargedTime = LocalDateTime.now().plusYears(1);
+            me.setExpirationTime(TimeUtils.asDate(chargedTime));
+
 
             //设置为已充值过のBOY
             me.setCharged(true);
@@ -223,16 +224,17 @@ public class VipCardController {
                 }
             }
         }
+        //充过
         //还要判断是否已过期
         //没过期直接续一年，已过期当前时间充一年啊！！！！！！！！！！！！！！！！！！！！！！！！
         else {
-            Date now = new Date();
+            LocalDateTime now = LocalDateTime.now();
             //如果是过期了的，怎么可能在过期时间上续？肯定当前时间啊
-            if (expTime.getTime().before(now)) {
-                expTime.setTime(now);
+            if (usersExpTime.isBefore(now)) {
+                usersExpTime = now;
             }
-            expTime.set(Calendar.YEAR,expTime.get(Calendar.YEAR)+1);
-            me.setExpirationTime(expTime.getTime());
+            //★充一年★
+            me.setExpirationTime(TimeUtils.asDate(usersExpTime.plusYears(1)));
         }
         //安全性设计，见L-128
         redisTemplate.delete(openid);
